@@ -22,8 +22,9 @@ public class GravitySource : MonoBehaviour {
 		if(collider == null)
 			Debug.LogError("GravitySource for " + gameObject.name + " has none SphereTriggerCollider");
 		foreach (Collider hit in Physics.OverlapSphere (transform.position, collider.radius)) {
-			if(hit.gameObject != this.gameObject)
-				bodies.Add(hit.gameObject.GetComponent<Rigidbody>());
+			Rigidbody body = hit.gameObject.GetComponent<Rigidbody> ();
+			if(body != null && hit.gameObject != this.gameObject)
+				bodies.Add(body);
 		}
 	}
 
