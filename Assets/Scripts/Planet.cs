@@ -28,7 +28,7 @@ public class Planet : MonoBehaviour {
 	int i = 0;
 
 	void Update() {
-		if (i++ < 250)
+		if (i++ < 500)
 			spawnTrees ();
 	}
 
