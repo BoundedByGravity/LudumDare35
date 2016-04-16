@@ -26,18 +26,16 @@ public class GravitySource : MonoBehaviour {
 	}
 
 	void Update() {
-		Debug.Log(bodies.Count);
+		//Debug.Log(bodies.Count);
 	}
 
 	// Update is called often
 	void FixedUpdate () {
-		if (bodies.Count > 0) {
-			foreach (Rigidbody body in bodies) {
-				Vector3 normVectorToPlayer = (this.transform.position - body.transform.position).normalized;
-				float dist = Vector3.Distance (this.transform.position, body.transform.position);
-				Vector3 force = normVectorToPlayer * gravityConstant * gameObject.GetComponent<Rigidbody> ().mass * body.mass / (dist * dist);
-				body.AddForce (force);
-			}
+		foreach (Rigidbody body in bodies) {
+			Vector3 normVectorToPlayer = (this.transform.position - body.transform.position).normalized;
+			float dist = Vector3.Distance (this.transform.position, body.transform.position);
+			Vector3 force = normVectorToPlayer * gravityConstant * gameObject.GetComponent<Rigidbody> ().mass * body.mass / (dist * dist);
+			body.AddForce (force);
 		}
 	}
 
