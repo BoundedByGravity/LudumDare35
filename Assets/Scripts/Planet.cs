@@ -2,9 +2,10 @@
 using System.Collections;
 
 [RequireComponent(typeof(SphereCollider))]
-public class PlanetGeneration : MonoBehaviour {
+public class Planet : MonoBehaviour {
 
 	public GameObject core;
+	float size = 1;
 	float radius, offset;
 	GameObject obj, holder;
 	
@@ -18,22 +19,22 @@ public class PlanetGeneration : MonoBehaviour {
 		}
 		radius = collider.radius * core.transform.localScale.x;
 		offset = 0.3f;
-		obj = Resources.Load ("SpawnThis") as GameObject;
+		obj = Resources.Load ("Tree") as GameObject;
 		//Destroy (obj);
 		holder = new GameObject("Generated");
 		holder.transform.parent = this.transform;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		spawn (holder.transform);
+
+	public void setSize(float size) {
+		transform.localScale *= size;
+		radius *= size;
 	}
 
-	public void spawn(Transform parent) {
-		Vector3 spawnPos = Random.onUnitSphere * radius;
-		obj = Instantiate (obj, spawnPos, Quaternion.FromToRotation(Vector3.up, spawnPos - transform.position)) as GameObject;
+	public void spawnTrees() {
+		Vector3 spawnPos = Random.onUnitSphere * radius + transform.position;
+		GameObject clone = Instantiate (obj, spawnPos, Quaternion.FromToRotation(Vector3.up, spawnPos - transform.position)) as GameObject;
 
-		Collider collider = obj.GetComponent<Collider> ();
+		Collider collider = clone.GetComponent<Collider> ();
 		float offset = 0;
 		if (collider.GetType () == typeof(BoxCollider)) {
 			offset = ((BoxCollider)collider).size.y / 2f - this.offset;
@@ -42,7 +43,7 @@ public class PlanetGeneration : MonoBehaviour {
 		} else if(collider.GetType() == typeof(CapsuleCollider)) { 
 			offset = ((CapsuleCollider)collider).height / 2f - this.offset;
 		}
-		obj.transform.position += obj.transform.up * offset;
-		obj.transform.parent = parent;
+		clone.transform.position += clone.transform.up * offset;
+		clone.transform.parent = holder.transform;
 	}
 }
