@@ -5,9 +5,8 @@ using System.Collections;
 public class Planet : MonoBehaviour {
 
 	public GameObject core;
-	float size = 1;
-	float radius, offset;
-	GameObject obj, holder;
+	GameObject tree, holder;
+	Mesh mesh;
 	
 	// Use this for initialization
 	void Start () {
@@ -17,33 +16,25 @@ public class Planet : MonoBehaviour {
 			if (!col.isTrigger)
 				collider = col;
 		}
-		radius = collider.radius * core.transform.localScale.x;
-		offset = 0.3f;
-		obj = Resources.Load ("Tree") as GameObject;
-		//Destroy (obj);
+		tree = Resources.Load ("Gran") as GameObject;
 		holder = new GameObject("Generated");
 		holder.transform.parent = this.transform;
+		holder.transform.localScale = Vector3.one;
+		holder.transform.localPosition = Vector3.zero;
+
+		mesh = core.GetComponent<MeshFilter>().mesh;
 	}
 
-	public void setSize(float size) {
-		transform.localScale *= size;
-		radius *= size;
+	int i = 0;
+
+	void Update() {
+		if (i++ < 250)
+			spawnTrees ();
 	}
 
 	public void spawnTrees() {
-		Vector3 spawnPos = Random.onUnitSphere * radius + transform.position;
-		GameObject clone = Instantiate (obj, spawnPos, Quaternion.FromToRotation(Vector3.up, spawnPos - transform.position)) as GameObject;
-
-		Collider collider = clone.GetComponent<Collider> ();
-		float offset = 0;
-		if (collider.GetType () == typeof(BoxCollider)) {
-			offset = ((BoxCollider)collider).size.y / 2f - this.offset;
-		} else if (collider.GetType () == typeof(SphereCollider)) {
-			offset = ((SphereCollider)collider).radius / 2f - this.offset;
-		} else if(collider.GetType() == typeof(CapsuleCollider)) { 
-			offset = ((CapsuleCollider)collider).height / 2f - this.offset;
-		}
-		clone.transform.position += clone.transform.up * offset;
+		Vector3 spawnPos = mesh.vertices [Random.Range(0, mesh.vertices.Length)] * core.transform.localScale.x * transform.localScale.x + core.transform.position;
+		GameObject clone = Instantiate (tree, spawnPos, Quaternion.FromToRotation(Vector3.up, spawnPos - transform.position)) as GameObject;
 		clone.transform.parent = holder.transform;
 	}
 }
