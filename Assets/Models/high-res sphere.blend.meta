@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: 2e099f8d3da0c4b2a8fc0b46cd4cb904
-timeCreated: 1460804332
+guid: 976c237d3015b4370a938cc2ab66db8f
+timeCreated: 1460825561
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
-  fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Icosphere
-    4300002: Sphere
+  fileIDToRecycleName: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -68,7 +62,7 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   additionalBone: 0
   userData: 
   assetBundleName: 

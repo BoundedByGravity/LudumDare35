@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour {
 	Rigidbody body;
 	float radius = 26;
 	Vector3 trajectory = new Vector3 (0, 0, 1);
-	float moveSpeed = 2.0f;
+	float moveSpeed = 0.5f;
 	//Vector3 prevAddedMoveVelocity;
 	//GravitySink gravitySink;
 
