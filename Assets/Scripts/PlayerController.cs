@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		trajectory = new Vector3 (0, 0, 1);
-		moveSpeed = 7f;
+		moveSpeed = 5f;
 		jumpSpeed = 3f;
 		boundcnd = radius/100f;
 		landradius = radius * 1.005f;
@@ -114,16 +114,14 @@ public class PlayerController : MonoBehaviour {
 		trajectory = (trajectory - Vector3.Project (trajectory, up)).normalized;
 		camerat = (camerat - Vector3.Project (camerat, up)).normalized;
 		body.rotation = Quaternion.LookRotation (camerat, up);
-
+		if (rotateCharacterInput != 0) {
+			Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (camerat, up).normalized;
+			camerat = (camerat * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180)).normalized;
+		}
 		if (isBound) {
 			// TODO: Better solution wanted, but better solution hard
 			trajectory = camerat;
 			// Måns is love, Måns is life
-			if (rotateCharacterInput != 0) {
-				Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (trajectory, up).normalized;
-				trajectory = trajectory * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
-			}
-			camerat = trajectory;
 
 			// Moves the character forward/backwards
 			Vector3 forwardOrBackwardVector = forwardCharacterInput * trajectory;
@@ -143,11 +141,6 @@ public class PlayerController : MonoBehaviour {
 			if (jump) {
 				body.position += up * 2 * boundcnd;
 				body.velocity += up * jumpSpeed;
-			}
-		} else {
-			if (rotateCharacterInput != 0) {
-				Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (camerat, up).normalized;
-				camerat = camerat * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
 			}
 		}
 	}
