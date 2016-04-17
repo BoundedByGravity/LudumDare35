@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour {
 	float radius = 26;	// TODO: Load from radius of parent
 	[Range (1,20)] public float moveSpeed;
 	[Range (1,20)] public float jumpSpeed;
+	float sprintFactor = 2f;
 	float jumpspeed;
 	float boundcnd;
 	float landradius;
@@ -34,7 +35,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		moveSpeed = 7f;
+		moveSpeed = 5f;
 		jumpSpeed = 3f;
 		boundcnd = radius/100f;
 		landradius = radius * 1.005f;
@@ -67,10 +68,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		float horizontalLeftStick = Input.GetAxis ("Horizontal");
-		float verticalLeftStick = Input.GetAxis ("Vertical");
-		bool jump = Input.GetButtonDown("Jump");
-
 		bool cancel = Input.GetButtonDown("Cancel");
 		if (cancel) {
 			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
@@ -80,21 +77,34 @@ public class PlayerController : MonoBehaviour {
 			}
 			Cursor.visible = !Cursor.visible;
 		}
-		Camera camera = this.GetComponentInChildren<Camera>();
+		//Camera camera = this.GetComponentInChildren<Camera>();
 		//camera.transform.Rotate (new Vector3 (-dmousey, dmousex, 0));
 
-		if (Input.GetButtonDown ("Fire1")) {
-			//Instantiate (bullet, transform.position, transform.rotation);
+		// Useful for checking which button is which
+		/*
+		foreach(string input in new string[]{"Fire1", "Fire2", "Fire3", "Sprint", "Jump"}) {
+			if (Input.GetButton (input)) {
+				Debug.Log (input);
+			}
 		}
+		*/
+
+		float horizontalLeftStick = Input.GetAxis ("Horizontal");
+		float verticalLeftStick = Input.GetAxis ("Vertical");
+
+		Debug.Log (horizontalLeftStick + " " + verticalLeftStick);
+
+		bool jump = Input.GetButtonDown("Jump");
+		bool sprint = Input.GetButton ("Sprint");
 
 		float forwardCharacterInput = verticalLeftStick;
 		float sidewaysCharacterInput = horizontalLeftStick;
 		float rotateCharacterInput = deltaMouseX; deltaMouseX = 0;
 
-		movePlayer (forwardCharacterInput, sidewaysCharacterInput, rotateCharacterInput, jump);
+		movePlayer (forwardCharacterInput, sidewaysCharacterInput, rotateCharacterInput, jump, sprint);
 	}
 
-	void movePlayer(float forwardCharacterInput, float sidewaysCharacterInput, float rotateCharacterInput, bool jump) {
+	void movePlayer(float forwardCharacterInput, float sidewaysCharacterInput, float rotateCharacterInput, bool jump, bool sprint) {
 		bool isBound = isPlanetbound ();
 		Vector3 up = getPlayerUpOnPlanet (Vector3.zero);
 
@@ -112,13 +122,16 @@ public class PlayerController : MonoBehaviour {
 			}
 
 			// Moves the character forward/backwards
-			Vector3 forwardSpeed = forwardCharacterInput * trajectory;
+			Vector3 forwardOrBackwardVector = forwardCharacterInput * trajectory;
 			Vector3 tradjectoryside = Vector3.Cross (-trajectory, up).normalized;
-			Vector3 sideSpeed = sidewaysCharacterInput * tradjectoryside;
-			// Moves the character sideways
-			//Vector3 sidewaySpeed = ?
+			Vector3 sidewaysVector = sidewaysCharacterInput * tradjectoryside;
 
-			body.velocity = moveSpeed*(forwardSpeed + sideSpeed).normalized; // + sidewaySpeed;
+			// TODO: Do something smoother than 0.7, such as a linear scale depending on how much weight lies forward
+			if (sprint && forwardCharacterInput > 0.7f) {
+				body.velocity = sprintFactor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
+			} else {
+				body.velocity = moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
+			}
 
 			land ();
 			if (jump) {
