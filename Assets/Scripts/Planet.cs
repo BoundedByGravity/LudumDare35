@@ -41,7 +41,7 @@ public class Planet : MonoBehaviour {
 
 	public void orbit() {
 		float modifier = Vector3.Distance(Vector3.zero, transform.position) / (core.transform.localScale.x + transform.localScale.x) + 1;
-		transform.RotateAround (Vector3.zero, Vector3.up, Time.deltaTime * modifier);
+		transform.RotateAround (Vector3.zero, Vector3.up, Time.deltaTime * modifier * 0);
 	}
 	/*
 	IEnumerator orbit(Vector3 pos) {

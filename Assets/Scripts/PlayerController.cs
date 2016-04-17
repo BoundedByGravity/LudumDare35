@@ -10,8 +10,8 @@ struct PlanetProperties {
 	public PlanetProperties(Planet p) {
 		float radius = p.transform.localScale.x;
 		this.radius = 1+radius;
-		this.boundaryCondition = this.radius * 0.005f;
-		this.landRadius = this.radius * 1.005f;
+		this.boundaryCondition = 0.01f;
+		this.landRadius = this.radius + 0.2f;
 		position = p.transform.position;
 	}
 }
@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour {
 	[Range (1,20)] public float jumpSpeed;
 	float sprintFactor = 2f;
 	float jumpspeed;
+	Planet[] planetA;
 
 	float deltaMouseX = 0;
 	float deltaMouseY = 0;
@@ -53,6 +54,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		planetA = Component.FindObjectsOfType<Planet> ();
 		trajectory = new Vector3 (0, 0, 1);
 		moveSpeed = 5f;
 		jumpSpeed = 3f;
@@ -87,6 +89,9 @@ public class PlayerController : MonoBehaviour {
 		// TODO: Use radius from closest planet or use a trigger to detect landing on a planet
 		float dist = Vector3.Distance (body.position, planetProperties.position);
 		return dist < planetProperties.landRadius + planetProperties.boundaryCondition;
+	}
+	float dist(Vector3 v) {
+		return Vector3.Distance (body.position, v);
 	}
 
 	void land() {
@@ -132,6 +137,21 @@ public class PlayerController : MonoBehaviour {
 		float rotateCharacterInput = deltaMouseX; deltaMouseX = 0;
 
 		movePlayer (forwardCharacterInput, sidewaysCharacterInput, rotateCharacterInput, jump, sprint);
+		float mindist = dist (planetProperties.position);
+		bool changed = false;
+		Planet swap = null;
+		foreach (Planet p in planetA) {
+			float tdist = dist (p.transform.position);
+			if (tdist < mindist) {
+				mindist = tdist;
+				swap = p;
+				changed = true;
+			}
+		}
+		if (changed) {
+			setPlanet (swap);
+		}
+
 	}
 
 	void movePlayer(float forwardCharacterInput, float sidewaysCharacterInput, float rotateCharacterInput, bool jump, bool sprint) {
