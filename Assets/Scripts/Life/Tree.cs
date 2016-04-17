@@ -9,6 +9,9 @@ public class Tree : Life {
 	}
 	
 	public override void interact() {
-		print ("Hi");
+		Transform[] allChildren = GetComponentsInChildren<Transform>();
+		foreach (Transform child in allChildren) {
+			child.parent = null;
+		}
 	}
 }
