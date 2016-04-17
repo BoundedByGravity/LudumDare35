@@ -886,11 +886,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 1780385563}
   - 33: {fileID: 1780385562}
-  - 135: {fileID: 1780385561}
   - 23: {fileID: 1780385560}
   - 114: {fileID: 1780385564}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Skysphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -923,18 +922,6 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!135 &1780385561
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1780385559}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &1780385562
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -950,7 +937,7 @@ Transform:
   m_GameObject: {fileID: 1780385559}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 200, y: 200, z: 200}
+  m_LocalScale: {x: 500, y: 500, z: 500}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
