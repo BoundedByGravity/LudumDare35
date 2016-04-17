@@ -7,9 +7,9 @@ struct PlanetProperties {
 	public float landRadius;
 	public Vector3 position;
 
-	public PlanetProperties(Planet p) {
+	public PlanetProperties(Planet p, float playerheight) {
 		float radius = p.transform.localScale.x;
-		this.radius = 1+radius;
+		this.radius = playerheight/2+radius;
 		this.boundaryCondition = 0.01f;
 		this.landRadius = this.radius + 0.2f;
 		position = p.transform.position;
@@ -18,6 +18,7 @@ struct PlanetProperties {
 
 [RequireComponent(typeof(GravitySink))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
 public class PlayerController : MonoBehaviour {
 
 	Rigidbody body;
@@ -34,8 +35,8 @@ public class PlayerController : MonoBehaviour {
 	[Range (1,20)] public float moveSpeed;
 	[Range (1,20)] public float jumpSpeed;
 	float sprintFactor = 2f;
-	float jumpspeed;
-	Planet[] planetA;
+	float jumpspeed = 10f;
+	Planet[] planetArray;
 
 	float deltaMouseX = 0;
 	float deltaMouseY = 0;
@@ -44,6 +45,8 @@ public class PlayerController : MonoBehaviour {
 	//Vector3 prevAddedMoveVelocity;
 	//GravitySink gravitySink;
 
+	float playerHeight;
+
 	const CursorLockMode cursorLockModeHidden = CursorLockMode.Confined;
 	const CursorLockMode cursorLockModeVisible = CursorLockMode.None;
 
@@ -51,30 +54,48 @@ public class PlayerController : MonoBehaviour {
 	public GameObject planet;
 	PlanetProperties planetProperties;
 
+	Camera firstPersonCam;
+	Camera thirdPersonCam;
+
+	void OnCollisionEnter(Collision collision) {
+		Debug.Log ("Collision enter");
+	}
+
+	void OnCollisionExit(Collision collision) {
+		Debug.Log ("Collision exit");
+	}
 
 	// Use this for initialization
 	void Start () {
-		planetA = Component.FindObjectsOfType<Planet> ();
-		trajectory = new Vector3 (0, 0, 1);
-		moveSpeed = 5f;
-		jumpSpeed = 3f;
-		body = this.gameObject.GetComponent<Rigidbody> ();
-		camerat = trajectory;
+		// Initialize cursor lock
 		Cursor.lockState = cursorLockModeHidden;
 		Cursor.visible = false;
 
-		setPlanet (planet.GetComponent<Planet>());
+		Camera[] cams = this.GetComponentsInChildren<Camera> ();
+		firstPersonCam = cams [0];
+		thirdPersonCam = cams [1];
 
-		Debug.Log (planetProperties.radius);
+		planetArray = Component.FindObjectsOfType<Planet> ();
+		body = this.gameObject.GetComponent<Rigidbody> ();
+		trajectory = new Vector3 (0, 0, 1);
+		moveSpeed = 5f;
+		jumpSpeed = 10f;
+
+		BoxCollider collider = body.GetComponent<BoxCollider> ();
+		playerHeight = 2*collider.bounds.extents.y;
+
+		camerat = trajectory;
+
+		setPlanet (planet.GetComponent<Planet>());
 	}
 
 	public void setPlanet(Planet p) {
 		this.planet = p.gameObject;
 		if (p != null) {
-			this.planetProperties = new PlanetProperties (p);
+			this.planetProperties = new PlanetProperties (p, playerHeight);
 		} else {
-			Debug.LogWarning ("No planet set for player, using default scale of 26");
-			this.planetProperties = new PlanetProperties (null);
+			Debug.LogError ("No planet set for player, using default scale of 26");
+			this.planetProperties = new PlanetProperties (null, playerHeight);
 		}
 	}
 
@@ -112,6 +133,11 @@ public class PlayerController : MonoBehaviour {
 			}
 			Cursor.visible = !Cursor.visible;
 		}
+
+		bool switchCamera = Input.GetButtonDown("Switch Camera");
+		firstPersonCam.enabled = !firstPersonCam.enabled;
+		thirdPersonCam.enabled = !thirdPersonCam.enabled;
+
 		//Camera camera = this.GetComponentInChildren<Camera>();
 		//camera.transform.Rotate (new Vector3 (-dmousey, dmousex, 0));
 
@@ -135,12 +161,16 @@ public class PlayerController : MonoBehaviour {
 		float forwardCharacterInput = verticalLeftStick;
 		float sidewaysCharacterInput = horizontalLeftStick;
 		float rotateCharacterInput = deltaMouseX; deltaMouseX = 0;
+		float pitchCharacterInput = deltaMouseY; deltaMouseY = 0;
 
 		movePlayer (forwardCharacterInput, sidewaysCharacterInput, rotateCharacterInput, jump, sprint);
+		//alignFirstPersonCamera (pitchCharacterInput);
+
+
 		float mindist = dist (planetProperties.position);
 		bool changed = false;
 		Planet swap = null;
-		foreach (Planet p in planetA) {
+		foreach (Planet p in planetArray) {
 			float tdist = dist (p.transform.position);
 			if (tdist < mindist) {
 				mindist = tdist;
@@ -152,6 +182,18 @@ public class PlayerController : MonoBehaviour {
 			setPlanet (swap);
 		}
 
+	}
+
+	void alignFirstPersonCamera(float pitchCharacterInput) {
+		// TODO: This wont be the first person camera always
+		firstPersonCam.transform.Rotate(new Vector3(-pitchCharacterInput, 0, 0));
+		float currentPitch = firstPersonCam.transform.localRotation.eulerAngles.x;
+
+		// Clamp camera angle
+		const float upperLimit = 300;
+		const float lowerLimit = 80;
+		currentPitch = currentPitch < 180 ? Mathf.Min(currentPitch, lowerLimit) : Mathf.Max(currentPitch, upperLimit);
+		firstPersonCam.transform.localRotation = Quaternion.Euler (currentPitch, 0, 0);
 	}
 
 	void movePlayer(float forwardCharacterInput, float sidewaysCharacterInput, float rotateCharacterInput, bool jump, bool sprint) {
