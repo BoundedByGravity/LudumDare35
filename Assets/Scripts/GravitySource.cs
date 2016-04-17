@@ -49,7 +49,7 @@ public class GravitySource : MonoBehaviour {
 
 	void OnTriggerExit(Collider collider) {
 		GravitySink sinkObj = collider.gameObject.GetComponent<GravitySink> ();
-		Debug.Log ("Trigger exit: " + sinkObj);
+		//Debug.Log ("Trigger exit: " + sinkObj);
 		//body.AddForce (Vector3.zero); // Remove force?
 		if (sinkObj != null) {
 			sinkObjects.Remove (sinkObj);

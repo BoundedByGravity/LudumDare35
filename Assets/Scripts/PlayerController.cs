@@ -9,7 +9,7 @@ struct PlanetProperties {
 
 	public PlanetProperties(Planet p, float playerheight) {
 		float radius = p.transform.localScale.x;
-		this.radius = playerheight/2+radius;
+		this.radius = playerheight/2 + radius;
 		this.boundaryCondition = 0.01f;
 		this.landRadius = this.radius + 0.2f;
 		this.position = p.transform.position;
@@ -54,20 +54,11 @@ public class PlayerController : MonoBehaviour {
 	public Planet planet;
 	PlanetProperties planetProperties;
 
-	Camera firstPersonCam;
-	Camera thirdPersonCam;
-
 	// Use this for initialization
 	void Start () {
 		// Initialize cursor lock
 		Cursor.lockState = cursorLockModeHidden;
 		Cursor.visible = false;
-
-		Camera[] cams = this.GetComponentsInChildren<Camera> ();
-		firstPersonCam = cams [0];
-		thirdPersonCam = cams [1];
-
-		Debug.Log (firstPersonCam.name);
 
 		planetArray = Component.FindObjectsOfType<Planet> ();
 		body = this.gameObject.GetComponent<Rigidbody> ();
@@ -77,6 +68,7 @@ public class PlayerController : MonoBehaviour {
 
 		BoxCollider collider = body.GetComponent<BoxCollider> ();
 		playerHeight = 2*collider.bounds.extents.y;
+		Debug.Log (playerHeight);
 
 		camerat = trajectory;
 
@@ -125,6 +117,15 @@ public class PlayerController : MonoBehaviour {
 		return (this.transform.position - planetProperties.position).normalized;
 	}
 
+	void printInput() {
+		// Method useful in debugging input
+		foreach(string input in new string[]{"Fire1", "Fire2", "Fire3", "Sprint", "Jump"}) {
+			if (Input.GetButton (input)) {
+				Debug.Log (input);
+			}
+		}
+	}
+
 	void FixedUpdate() {
 		bool cancel = Input.GetButtonDown("Cancel");
 		if (cancel) {
@@ -136,22 +137,13 @@ public class PlayerController : MonoBehaviour {
 			Cursor.visible = !Cursor.visible;
 		}
 
+		/*
 		bool switchCamera = Input.GetButtonDown("Switch Camera");
 		if (switchCamera) {
-			firstPersonCam.enabled = !firstPersonCam.enabled;
-			thirdPersonCam.enabled = !thirdPersonCam.enabled;
-		}
-
-		//Camera camera = this.GetComponentInChildren<Camera>();
-		//camera.transform.Rotate (new Vector3 (-dmousey, dmousex, 0));
-
-		// Useful for checking which button is which
-		/*
-		foreach(string input in new string[]{"Fire1", "Fire2", "Fire3", "Sprint", "Jump"}) {
-			if (Input.GetButton (input)) {
-				Debug.Log (input);
+			foreach(Camera camera in this.GetComponentsInChildren<Camera>()) {
+				camera.enabled = !camera.enabled;
 			}
-		}
+			}
 		*/
 
 		float horizontalLeftStick = Input.GetAxis ("Horizontal");
@@ -168,7 +160,9 @@ public class PlayerController : MonoBehaviour {
 		float pitchCharacterInput = deltaMouseY; deltaMouseY = 0;
 
 		movePlayer (forwardCharacterInput, sidewaysCharacterInput, rotateCharacterInput, jump, sprint);
-		//alignFirstPersonCamera (pitchCharacterInput);
+		if (pitchCharacterInput != 0) {
+			alignFirstPersonCamera (pitchCharacterInput);
+		}
 
 
 		float mindist = dist (planetProperties.position);
@@ -190,6 +184,9 @@ public class PlayerController : MonoBehaviour {
 
 	void alignFirstPersonCamera(float pitchCharacterInput) {
 		// TODO: This wont be the first person camera always
+		Camera[] cameras = this.GetComponentsInChildren<Camera> ();
+		Debug.Log ("The first chosen camera is: " + cameras[0].name);
+		Camera firstPersonCam = cameras [0];
 		firstPersonCam.transform.Rotate(new Vector3(-pitchCharacterInput, 0, 0));
 		float currentPitch = firstPersonCam.transform.localRotation.eulerAngles.x;
 

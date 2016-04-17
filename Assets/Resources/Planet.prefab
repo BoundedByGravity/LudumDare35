@@ -10,7 +10,6 @@ GameObject:
   - 4: {fileID: 491004}
   - 33: {fileID: 3306836}
   - 23: {fileID: 2341282}
-  - 64: {fileID: 6468258}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -26,6 +25,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 448016}
+  - 135: {fileID: 135000010401283264}
   - 135: {fileID: 13547814}
   - 54: {fileID: 5455736}
   - 114: {fileID: 11455410}
@@ -45,7 +45,7 @@ Transform:
   m_GameObject: {fileID: 182184}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 40, y: 40, z: 40}
   m_Children:
   - {fileID: 491004}
   - {fileID: 4000012387558836}
@@ -114,18 +114,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &6468258
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 134704}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Convex: 0
-  m_Mesh: {fileID: 4300002, guid: 2e099f8d3da0c4b2a8fc0b46cd4cb904, type: 3}
 --- !u!114 &11414276
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -248,4 +236,16 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &135000010401283264
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 182184}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}

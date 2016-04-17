@@ -10,13 +10,13 @@ public class Galaxy : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		player = Instantiate (Resources.Load ("Player"), Vector3.up * 30, Quaternion.identity) as GameObject;
+		player = Instantiate (Resources.Load ("Player"), Vector3.up * 200, Quaternion.identity) as GameObject;
 		planets = new LinkedList<GameObject> ();
 		addPlanets (planets, 5);
 		float dist = 0;
 		int i = 0;
 		foreach(GameObject planet in planets) {
-			planet.transform.localScale *= 5f * (planets.Count - i++);
+			planet.transform.localScale *= (planets.Count - i++);
 			planet.GetComponent<Rigidbody> ().mass = planet.transform.localScale.x * 120f * (planets.Count - i++);
 			Planet p = planet.GetComponent<Planet> ();
 			planet.transform.position = Vector3.right * dist;
@@ -28,7 +28,6 @@ public class Galaxy : MonoBehaviour {
 		}
 		//player.GetComponent<PlayerController> ().planet = planets.First.Value;
 		player.GetComponent<PlayerController> ().setPlanet (planets.First.Value.GetComponent<Planet>());
-		Debug.Log ("player planet set");
 	}
 
 	// Update is called once per frame
