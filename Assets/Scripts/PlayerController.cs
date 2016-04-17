@@ -9,12 +9,23 @@ public class PlayerController : MonoBehaviour {
 	float radius = 26;
 	Vector3 trajectory = new Vector3 (0, 0, 1);
 	float moveSpeed = 0.5f;
+	float startjumpspeed = 1f;
+	float deaccelerationofjump = 0.1f;
+	bool jumping;
+	float jumpspeed;
+	float height;
+	float goingfwd;
+	Vector3 surfpos;
+
+
+	float degree_rotation = 3;
 	//Vector3 prevAddedMoveVelocity;
 	//GravitySink gravitySink;
 
 	// Use this for initialization
 	void Start () {
 		body = this.gameObject.GetComponent<Rigidbody> ();
+		jumping = false;
 		//gravitySink = this.GetComponent<GravitySink> ();
 		//prevAddedMoveVelocity = new Vector3 (0, 0, 0);
 	}
@@ -24,7 +35,7 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
-	bool isPlanetbound() {
+	/*bool isPlanetbound() {
 		float dist = Vector3.Distance (body.position, Vector3.zero);
 		// TODO: Use radius from sphere
 		return dist < radius+10;
@@ -32,15 +43,20 @@ public class PlayerController : MonoBehaviour {
 
 	void land() {
 		body.position = body.position.normalized * radius;
+	}*/
+
+	float getNextHeight(float height, float jumpspeed) {
+		return Mathf.Max (0, height + jumpspeed);
 	}
 
 	void FixedUpdate() {
 		float horizontal = Input.GetAxis ("Horizontal");
 		float vertical = Input.GetAxis ("Vertical");
+		bool jump = Input.GetKeyDown("space");
 
-		float degree_rotation = 3;
 
-		if (isPlanetbound ()) {
+
+		if (!jumping) {
 			// Måns is love, Måns is life
 			if (horizontal != 0) {
 				Vector3 trajectory2 = -horizontal * Vector3.Cross(trajectory, body.position.normalized);
@@ -54,9 +70,34 @@ public class PlayerController : MonoBehaviour {
 			Debug.Log (Vector3.Dot (trajectory, body.position));
 			body.gameObject.transform.rotation = Quaternion.LookRotation(trajectory, body.position);
 			Debug.Log (body.gameObject.transform.rotation);
-			land ();
+
+			if (jump) {
+				jumping = true;
+				goingfwd = vertical;
+				jumpspeed = startjumpspeed;
+				height = getNextHeight (0, jumpspeed);
+				surfpos = body.position;
+				body.position = surfpos * (radius + height) / radius;
+			}
+			Debug.Log (Vector3.Dot (trajectory, body.position));
+			body.gameObject.transform.rotation = Quaternion.LookRotation(trajectory, body.position);
+			Debug.Log (body.gameObject.transform.rotation);
+
+			//land ();
 		} else {
-			// If in space
+			if (goingfwd != 0) {
+				surfpos += (moveSpeed * goingfwd) * trajectory;
+				trajectory = (trajectory - Vector3.Project (trajectory, surfpos)).normalized;
+			}
+			jumpspeed -= deaccelerationofjump;
+			height = getNextHeight (height, jumpspeed);
+			body.position = surfpos * (radius + height) / radius;
+			if (height == 0) {
+				jumping = false;
+			}
+			Debug.Log (Vector3.Dot (trajectory, body.position));
+			body.gameObject.transform.rotation = Quaternion.LookRotation(trajectory, body.position);
+			Debug.Log (body.gameObject.transform.rotation);
 		}
 	}
 
