@@ -112,12 +112,13 @@ public class PlayerController : MonoBehaviour {
 			}
 
 			// Moves the character forward/backwards
-			Vector3 forwardSpeed = (moveSpeed * forwardCharacterInput) * trajectory;
-
+			Vector3 forwardSpeed = forwardCharacterInput * trajectory;
+			Vector3 tradjectoryside = Vector3.Cross (-trajectory, up).normalized;
+			Vector3 sideSpeed = sidewaysCharacterInput * tradjectoryside;
 			// Moves the character sideways
 			//Vector3 sidewaySpeed = ?
 
-			body.velocity = forwardSpeed; // + sidewaySpeed;
+			body.velocity = moveSpeed*(forwardSpeed + sideSpeed).normalized; // + sidewaySpeed;
 
 			land ();
 			if (jump) {
