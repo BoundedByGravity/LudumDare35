@@ -14,7 +14,7 @@ public class PlayerRaycast : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.E)) {
 			Ray ray = new Ray(origin, direction);
 			RaycastHit hit;
-			int lifeLayer = 1 << LayerMask.NameToLayer ("Life");
+			int lifeLayer = 1 << LayerMask.NameToLayer ("Lifeform");
 			if (Physics.Raycast(ray, out hit, maxDistance, lifeLayer)){
 				Life life = hit.collider.transform.GetComponent<Life> ();
 				if (life != null) {

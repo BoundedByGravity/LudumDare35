@@ -9,7 +9,8 @@ public class LifeTester : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		planet = GameObject.Find ("Planet").GetComponent<Planet> ();
-		planet.Spawn ("Gran", Random.Range(10,150), .5f);
+		planet.Spawn ("Tree", Random.Range(10,150), .5f);
 		planet.Spawn ("WaterWell", Random.Range (10, 20), .4f);
+		planet.Spawn ("Stone", Random.Range (10, 20), .4f);
 	}
 }

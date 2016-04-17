@@ -27,9 +27,9 @@ GameObject:
   - 4: {fileID: 486324}
   - 136: {fileID: 13607402}
   - 114: {fileID: 11432582}
-  m_Layer: 0
-  m_Name: Gran
-  m_TagString: Untagged
+  m_Layer: 8
+  m_Name: Tree
+  m_TagString: Lifeform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

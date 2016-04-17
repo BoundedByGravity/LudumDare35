@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 498912}
   - 33: {fileID: 3314778}
   - 23: {fileID: 2398836}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Wall (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ GameObject:
   - 4: {fileID: 421984}
   - 33: {fileID: 3382742}
   - 23: {fileID: 2349824}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Wall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - 4: {fileID: 475196}
   - 33: {fileID: 3387882}
   - 23: {fileID: 2315606}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Wall (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   - 4: {fileID: 410562}
   - 33: {fileID: 3321612}
   - 23: {fileID: 2388720}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Wall (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - 4: {fileID: 499060}
   - 33: {fileID: 3384224}
   - 23: {fileID: 2351490}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}

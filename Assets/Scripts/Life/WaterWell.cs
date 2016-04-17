@@ -7,11 +7,6 @@ public class WaterWell : Life {
 	void Start () {
 		StartCoroutine (Popup(1f));
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	public override void interact(GameObject player) {
 		Transform[] allChildren = GetComponentsInChildren<Transform>();

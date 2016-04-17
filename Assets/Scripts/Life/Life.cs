@@ -28,7 +28,7 @@ public abstract class Life : MonoBehaviour {
 		}
 	}
 
-	protected IEnumerator fadeOutAndDestroy(GameObject obj, float time) {
+	/*protected IEnumerator fadeOutAndDestroy(GameObject obj, float time) {
 		Destroy (obj, time);
 		//Fade childs if possible
 		Renderer[] renders = obj.GetComponentsInChildren<Renderer> ();
@@ -45,5 +45,5 @@ public abstract class Life : MonoBehaviour {
 				renders[i].material.color = Color.Lerp (fromColors[i], toColors[i], pastTime);
 			yield return null;
 		}
-	}
+	}*/
 }
