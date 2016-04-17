@@ -12,8 +12,8 @@ public class PlayerController : MonoBehaviour {
 	GameObject bullet;
 
 	// Initial trajectory vector, will change
-	Vector3 trajectory = new Vector3 (0, 0, 1);
-
+	Vector3 trajectory;
+	Vector3 camerat;
 	// Constants
 	float radius = 26;	// TODO: Load from radius of parent
 	[Range (1,20)] public float moveSpeed;
@@ -35,11 +35,13 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		moveSpeed = 5f;
+		trajectory = new Vector3 (0, 0, 1);
+		moveSpeed = 7f;
 		jumpSpeed = 3f;
 		boundcnd = radius/100f;
 		landradius = radius * 1.005f;
 		body = this.gameObject.GetComponent<Rigidbody> ();
+		camerat = trajectory;
 		Cursor.lockState = cursorLockModeHidden;
 		Cursor.visible = false;
 		//jumping = false;
@@ -110,16 +112,18 @@ public class PlayerController : MonoBehaviour {
 
 		//Debug.Log ("isBound: " + isBound + ", dist: " + Vector3.Distance(body.position, Vector3.zero));
 		trajectory = (trajectory - Vector3.Project (trajectory, up)).normalized;
-		body.rotation = Quaternion.LookRotation (trajectory, up);
+		camerat = (camerat - Vector3.Project (camerat, up)).normalized;
+		body.rotation = Quaternion.LookRotation (camerat, up);
 
 		if (isBound) {
 			// TODO: Better solution wanted, but better solution hard
-
+			trajectory = camerat;
 			// Måns is love, Måns is life
 			if (rotateCharacterInput != 0) {
 				Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (trajectory, up).normalized;
 				trajectory = trajectory * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
 			}
+			camerat = trajectory;
 
 			// Moves the character forward/backwards
 			Vector3 forwardOrBackwardVector = forwardCharacterInput * trajectory;
@@ -138,7 +142,11 @@ public class PlayerController : MonoBehaviour {
 				body.position += up * 2 * boundcnd;
 				body.velocity += up * jumpSpeed;
 			}
-
+		} else {
+			if (rotateCharacterInput != 0) {
+				Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (camerat, up).normalized;
+				camerat = camerat * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
+			}
 		}
 	}
 }
