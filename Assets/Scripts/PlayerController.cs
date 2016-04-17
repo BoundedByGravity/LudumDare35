@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour {
 	float sprintFactor = 2f;
 	float jumpspeed = 10f;
 	Planet[] planetArray;
+	bool stuck = false;
 
 	float deltaMouseX = 0;
 	float deltaMouseY = 0;
@@ -104,6 +105,13 @@ public class PlayerController : MonoBehaviour {
 		// TODO: Figure out what should go here
 		deltaMouseX += Input.GetAxis ("Mouse X");
 		deltaMouseY += Input.GetAxis ("Mouse Y");
+	}
+
+	void OnCollisionEnter(Collision collision) {
+		stuck = true;
+	}
+	void OnCollisionExit(Collision collision) {
+		stuck = false;
 	}
 
 	bool isPlanetbound() {
@@ -215,7 +223,8 @@ public class PlayerController : MonoBehaviour {
 			Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (camerat, up).normalized;
 			camerat = (camerat * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180)).normalized;
 		}
-		if (isBound) {
+
+		if (isBound || stuck) {
 			// Måns is love, Måns is life
 
 			trajectory = camerat;
@@ -233,17 +242,20 @@ public class PlayerController : MonoBehaviour {
 			float factor = Mathf.Max (Mathf.Abs (forwardCharacterInput), Mathf.Abs (sidewaysCharacterInput));
 
 			// TODO: Do something smoother than 0.7, such as a linear scale depending on how much weight lies forward
-			if (sprint && forwardCharacterInput > Mathf.Abs(sidewaysCharacterInput)) { //To much behviour in comparasion ;)
+			if (sprint && forwardCharacterInput > Mathf.Abs (sidewaysCharacterInput)) { //To much behviour in comparasion ;)
 				body.velocity = factor * sprintFactor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
 			} else {
 				body.velocity = factor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
 			}
-
-			land ();
+			if (isBound) {
+				land ();
+			}
 			if (jump) {
 				body.position += up * 2 * planetProperties.boundaryCondition;
 				body.velocity += up * jumpSpeed;
 			}
 		}
+
+
 	}
 }
