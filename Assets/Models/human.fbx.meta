@@ -1,0 +1,154 @@
+fileFormatVersion: 2
+guid: 2e0d8e14a392548bb97654004c293c42
+timeCreated: 1460900147
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: ArmL
+    100002: ArmR
+    100004: Body
+    100006: Cap
+    100008: CapShade
+    100010: FootL
+    100012: FootR
+    100014: Head
+    100016: //RootNode
+    100018: LegL
+    100020: LegR
+    400000: ArmL
+    400002: ArmR
+    400004: Body
+    400006: Cap
+    400008: CapShade
+    400010: FootL
+    400012: FootR
+    400014: Head
+    400016: //RootNode
+    400018: LegL
+    400020: LegR
+    2300000: ArmL
+    2300002: ArmR
+    2300004: Body
+    2300006: Cap
+    2300008: CapShade
+    2300010: FootL
+    2300012: FootR
+    2300014: Head
+    2300016: LegL
+    2300018: LegR
+    3300000: ArmL
+    3300002: ArmR
+    3300004: Body
+    3300006: Cap
+    3300008: CapShade
+    3300010: FootL
+    3300012: FootR
+    3300014: Head
+    3300016: LegL
+    3300018: LegR
+    4300000: CapShade
+    4300002: Cap
+    4300004: ArmL
+    4300006: FootL
+    4300008: LegL
+    4300010: Head
+    4300012: Body
+    4300014: LegR
+    4300016: FootR
+    4300018: ArmR
+    7400000: Cap|CapAction
+    7400002: Cap|CylinderAction
+    7400004: Cap|FootLAction
+    7400006: Cap|FootRAction
+    7400008: Cap|LegLAction
+    7400010: Cap|LegRAction
+    7400012: FootL|CapAction
+    7400014: FootL|CylinderAction
+    7400016: FootL|FootLAction
+    7400018: FootL|FootRAction
+    7400020: FootL|LegLAction
+    7400022: FootL|LegRAction
+    7400024: LegL|CapAction
+    7400026: LegL|CylinderAction
+    7400028: LegL|FootLAction
+    7400030: LegL|FootRAction
+    7400032: LegL|LegLAction
+    7400034: LegL|LegRAction
+    7400036: LegR|CapAction
+    7400038: LegR|CylinderAction
+    7400040: LegR|FootLAction
+    7400042: LegR|FootRAction
+    7400044: LegR|LegLAction
+    7400046: LegR|LegRAction
+    7400048: FootR|CapAction
+    7400050: FootR|CylinderAction
+    7400052: FootR|FootLAction
+    7400054: FootR|FootRAction
+    7400056: FootR|LegLAction
+    7400058: FootR|LegRAction
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
