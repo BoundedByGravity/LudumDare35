@@ -68,8 +68,9 @@ public class PlayerController : MonoBehaviour {
 
 		if (isBound && jump) {
 			// Must be "up" relative to player
-			body.position += new Vector3 (0, 2, 0);
-			body.velocity = new Vector3(0, 5, 0);
+			Vector3 up = body.position.normalized;
+			body.position += up*3;
+			body.velocity += up*3;
 		} else {
 			if (isBound) {
 				// Måns is love, Måns is life
