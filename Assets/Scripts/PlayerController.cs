@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(GravitySink))]
@@ -6,6 +6,11 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	Rigidbody body;
+
+	GravitySink gravitySink;
+
+	GameObject bullet;
+
 	// Initial trajectory vector, will change
 	Vector3 trajectory = new Vector3 (0, 0, 1);
 
@@ -32,7 +37,7 @@ public class PlayerController : MonoBehaviour {
 		//jumping = false;
 		//prevAddedMoveVelocity = new Vector3 (0, 0, 0);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		// TODO: Figure out what should go here
@@ -56,6 +61,15 @@ public class PlayerController : MonoBehaviour {
 		float horizontal = Input.GetAxis ("Horizontal");
 		float vertical = Input.GetAxis ("Vertical");
 		bool jump = Input.GetButtonDown("Jump");
+
+		float dmousex = Input.GetAxis ("Mouse X");
+		float dmousey = Input.GetAxis ("Mouse Y");
+		Camera camera = this.GetComponentInChildren<Camera>();
+		//camera.transform.Rotate (new Vector3 (-dmousey, dmousex, 0));
+
+		if (Input.GetButtonDown ("Fire1")) {
+			//Instantiate (bullet, transform.position, transform.rotation);
+		}
 
 		bool isBound = isPlanetbound ();
 		Vector3 up = getPlayerUpOnPlanet (Vector3.zero);

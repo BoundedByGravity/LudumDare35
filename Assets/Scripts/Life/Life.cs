@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class Life : MonoBehaviour {
 
-	public abstract void interact ();
+	public abstract void interact (GameObject player);
 
 	protected IEnumerator Popup(float time) {
 		Vector3 originalScale = transform.localScale;
