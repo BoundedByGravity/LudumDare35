@@ -12,7 +12,7 @@ struct PlanetProperties {
 		this.radius = playerheight/2+radius;
 		this.boundaryCondition = 0.01f;
 		this.landRadius = this.radius + 0.2f;
-		position = p.transform.position;
+		this.position = p.transform.position;
 	}
 }
 
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour {
 	const CursorLockMode cursorLockModeVisible = CursorLockMode.None;
 
 	// Lol
-	public GameObject planet;
+	public Planet planet;
 	PlanetProperties planetProperties;
 
 	Camera firstPersonCam;
@@ -67,6 +67,8 @@ public class PlayerController : MonoBehaviour {
 		firstPersonCam = cams [0];
 		thirdPersonCam = cams [1];
 
+		Debug.Log (firstPersonCam.name);
+
 		planetArray = Component.FindObjectsOfType<Planet> ();
 		body = this.gameObject.GetComponent<Rigidbody> ();
 		trajectory = new Vector3 (0, 0, 1);
@@ -78,16 +80,17 @@ public class PlayerController : MonoBehaviour {
 
 		camerat = trajectory;
 
-		setPlanet (planet.GetComponent<Planet>());
+		if(this.planet != null) {
+			setPlanet (this.planet);
+		}
 	}
 
 	public void setPlanet(Planet p) {
-		this.planet = p.gameObject;
+		this.planet = p;
 		if (p != null) {
 			this.planetProperties = new PlanetProperties (p, playerHeight);
 		} else {
-			Debug.LogError ("No planet set for player, using default scale of 26");
-			this.planetProperties = new PlanetProperties (null, playerHeight);
+			Debug.LogError ("No planet set for player since passed planet was null, player control should not work");
 		}
 	}
 

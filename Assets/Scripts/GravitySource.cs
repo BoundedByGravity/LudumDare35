@@ -41,7 +41,7 @@ public class GravitySource : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collider) {
 		GravitySink sinkObj = collider.gameObject.GetComponent<GravitySink> ();
-		Debug.Log ("Trigger enter: " + sinkObj);
+		//Debug.Log ("Trigger enter: " + sinkObj);
 		if (sinkObj != null) {
 			sinkObjects.Add (sinkObj);
 		}

@@ -28,6 +28,7 @@ public class Galaxy : MonoBehaviour {
 		}
 		//player.GetComponent<PlayerController> ().planet = planets.First.Value;
 		player.GetComponent<PlayerController> ().setPlanet (planets.First.Value.GetComponent<Planet>());
+		Debug.Log ("player planet set");
 	}
 
 	// Update is called once per frame
