@@ -5,11 +5,14 @@ struct PlanetProperties {
 	public float radius;
 	public float boundaryCondition;
 	public float landRadius;
+	public Vector3 position;
 
-	public PlanetProperties(float radius) {
+	public PlanetProperties(Planet p) {
+		float radius = p.transform.localScale.x;
 		this.radius = 1+radius;
 		this.boundaryCondition = this.radius * 0.005f;
 		this.landRadius = this.radius * 1.005f;
+		position = p.transform.position;
 	}
 }
 
@@ -36,7 +39,7 @@ public class PlayerController : MonoBehaviour {
 	float deltaMouseX = 0;
 	float deltaMouseY = 0;
 
-	float degree_rotation = 3;
+	float degree_rotation = 1;
 	//Vector3 prevAddedMoveVelocity;
 	//GravitySink gravitySink;
 
@@ -58,14 +61,19 @@ public class PlayerController : MonoBehaviour {
 		Cursor.lockState = cursorLockModeHidden;
 		Cursor.visible = false;
 
-		if (planet != null) {
-			planetProperties = new PlanetProperties (planet.transform.localScale.x);
-		} else {
-			Debug.LogWarning ("No planet set for player, using default scale of 26");
-			planetProperties = new PlanetProperties (26);
-		}
+		setPlanet (planet.GetComponent<Planet>());
 
 		Debug.Log (planetProperties.radius);
+	}
+
+	public void setPlanet(Planet p) {
+		this.planet = p.gameObject;
+		if (p != null) {
+			this.planetProperties = new PlanetProperties (p);
+		} else {
+			Debug.LogWarning ("No planet set for player, using default scale of 26");
+			this.planetProperties = new PlanetProperties (null);
+		}
 	}
 
 	// Update is called once per frame
@@ -77,16 +85,16 @@ public class PlayerController : MonoBehaviour {
 
 	bool isPlanetbound() {
 		// TODO: Use radius from closest planet or use a trigger to detect landing on a planet
-		float dist = Vector3.Distance (body.position, Vector3.zero);
+		float dist = Vector3.Distance (body.position, planetProperties.position);
 		return dist < planetProperties.landRadius + planetProperties.boundaryCondition;
 	}
 
 	void land() {
-		body.position = body.position.normalized * planetProperties.landRadius;
+		body.position = (body.position-planetProperties.position).normalized * planetProperties.landRadius + planetProperties.position;
 	}
 
 	Vector3 getPlayerUpOnPlanet() {
-		return (this.transform.position - planet.transform.position).normalized;
+		return (this.transform.position - planetProperties.position).normalized;
 	}
 
 	void FixedUpdate() {

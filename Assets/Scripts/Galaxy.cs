@@ -5,16 +5,18 @@ using System.Collections.Generic;
 public class Galaxy : MonoBehaviour {
 
 	public float multiplier = 1.2f;
-	List<GameObject> planets;
+	GameObject player;
+	LinkedList<GameObject> planets;
 
 	// Use this for initialization
-	void Start () {
-		planets = new List<GameObject> ();
+	void Awake () {
+		player = Instantiate (Resources.Load ("Player"), Vector3.up * 61, Quaternion.identity) as GameObject;
+		planets = new LinkedList<GameObject> ();
 		addPlanets (planets, 5);
 		float dist = 0;
 		int i = 0;
 		foreach(GameObject planet in planets) {
-			planet.transform.localScale *= Random.Range(1f, multiplier) * (planets.Count - i++);
+			planet.transform.localScale *= 10f * Random.Range(1f, multiplier) * (planets.Count - i++);
 			Planet p = planet.GetComponent<Planet> ();
 			planet.transform.position = Vector3.right * dist;
 			p.Spawn ("Tree", Random.Range(10,150), .5f);
@@ -22,6 +24,8 @@ public class Galaxy : MonoBehaviour {
 			p.Spawn ("Stone", Random.Range (10, 20), .4f);
 			dist += p.transform.localScale.x * p.core.transform.localScale.x * 2 * multiplier;
 		}
+		//player.GetComponent<PlayerController> ().planet = planets.First.Value;
+		player.GetComponent<PlayerController> ().setPlanet (planets.First.Value.GetComponent<Planet>());
 	}
 
 	// Update is called once per frame
@@ -32,9 +36,9 @@ public class Galaxy : MonoBehaviour {
 		}
 	}
 
-	void addPlanets(List<GameObject> planets, int number) {
+	void addPlanets(LinkedList<GameObject> planets, int number) {
 		for (int i = 0; i < number; i++) {
-			planets.Add(Instantiate (Resources.Load ("Planet"), Vector3.zero, Quaternion.identity) as GameObject);
+			planets.AddLast(Instantiate (Resources.Load ("Planet"), Vector3.zero, Quaternion.identity) as GameObject);
 		}
 	}
 }
