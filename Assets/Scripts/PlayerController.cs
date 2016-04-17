@@ -1,6 +1,18 @@
 using UnityEngine;
 using System.Collections;
 
+struct PlanetProperties {
+	public float radius;
+	public float boundaryCondition;
+	public float landRadius;
+
+	public PlanetProperties(float radius) {
+		this.radius = 1+radius;
+		this.boundaryCondition = this.radius * 0.005f;
+		this.landRadius = this.radius * 1.005f;
+	}
+}
+
 [RequireComponent(typeof(GravitySink))]
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour {
@@ -14,14 +26,12 @@ public class PlayerController : MonoBehaviour {
 	// Initial trajectory vector, will change
 	Vector3 trajectory;
 	Vector3 camerat;
+
 	// Constants
-	float radius = 26;	// TODO: Load from radius of parent
 	[Range (1,20)] public float moveSpeed;
 	[Range (1,20)] public float jumpSpeed;
 	float sprintFactor = 2f;
 	float jumpspeed;
-	float boundcnd;
-	float landradius;
 
 	float deltaMouseX = 0;
 	float deltaMouseY = 0;
@@ -33,19 +43,29 @@ public class PlayerController : MonoBehaviour {
 	const CursorLockMode cursorLockModeHidden = CursorLockMode.Confined;
 	const CursorLockMode cursorLockModeVisible = CursorLockMode.None;
 
+	// Lol
+	public GameObject planet;
+	PlanetProperties planetProperties;
+
+
 	// Use this for initialization
 	void Start () {
 		trajectory = new Vector3 (0, 0, 1);
-		moveSpeed = 7f;
+		moveSpeed = 5f;
 		jumpSpeed = 3f;
-		boundcnd = radius/100f;
-		landradius = radius * 1.005f;
 		body = this.gameObject.GetComponent<Rigidbody> ();
 		camerat = trajectory;
 		Cursor.lockState = cursorLockModeHidden;
 		Cursor.visible = false;
-		//jumping = false;
-		//prevAddedMoveVelocity = new Vector3 (0, 0, 0);
+
+		if (planet != null) {
+			planetProperties = new PlanetProperties (planet.transform.localScale.x);
+		} else {
+			Debug.LogWarning ("No planet set for player, using default scale of 26");
+			planetProperties = new PlanetProperties (26);
+		}
+
+		Debug.Log (planetProperties.radius);
 	}
 
 	// Update is called once per frame
@@ -58,15 +78,15 @@ public class PlayerController : MonoBehaviour {
 	bool isPlanetbound() {
 		// TODO: Use radius from closest planet or use a trigger to detect landing on a planet
 		float dist = Vector3.Distance (body.position, Vector3.zero);
-		return dist < landradius + boundcnd;
+		return dist < planetProperties.landRadius + planetProperties.boundaryCondition;
 	}
 
 	void land() {
-		body.position = body.position.normalized * landradius;
+		body.position = body.position.normalized * planetProperties.landRadius;
 	}
 
-	Vector3 getPlayerUpOnPlanet(Vector3 planetPos) {
-		return (this.transform.position - planetPos).normalized;
+	Vector3 getPlayerUpOnPlanet() {
+		return (this.transform.position - planet.transform.position).normalized;
 	}
 
 	void FixedUpdate() {
@@ -94,7 +114,7 @@ public class PlayerController : MonoBehaviour {
 		float horizontalLeftStick = Input.GetAxis ("Horizontal");
 		float verticalLeftStick = Input.GetAxis ("Vertical");
 
-		Debug.Log (horizontalLeftStick + " " + verticalLeftStick);
+		//Debug.Log (horizontalLeftStick + " " + verticalLeftStick);
 
 		bool jump = Input.GetButtonDown("Jump");
 		bool sprint = Input.GetButton ("Sprint");
@@ -107,8 +127,15 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void movePlayer(float forwardCharacterInput, float sidewaysCharacterInput, float rotateCharacterInput, bool jump, bool sprint) {
+		/* Moves the player according to input arguments (which are all actual controller input)
+		 *  As it turns out, making a good model of input is hard, and the following requirements must be met:
+		 *  - Should be able to walk around a planet (given simulated gravity)
+		 *  - Should not run faster diagonally than forward/sideways
+		 *  - Should be able to sprint
+		 * All are fulfilled.
+		 */
 		bool isBound = isPlanetbound ();
-		Vector3 up = getPlayerUpOnPlanet (Vector3.zero);
+		Vector3 up = getPlayerUpOnPlanet ();
 
 		//Debug.Log ("isBound: " + isBound + ", dist: " + Vector3.Distance(body.position, Vector3.zero));
 		trajectory = (trajectory - Vector3.Project (trajectory, up)).normalized;
@@ -116,9 +143,9 @@ public class PlayerController : MonoBehaviour {
 		body.rotation = Quaternion.LookRotation (camerat, up);
 
 		if (isBound) {
-			// TODO: Better solution wanted, but better solution hard
-			trajectory = camerat;
 			// Måns is love, Måns is life
+
+			trajectory = camerat;
 			if (rotateCharacterInput != 0) {
 				Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (trajectory, up).normalized;
 				trajectory = trajectory * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
@@ -139,7 +166,7 @@ public class PlayerController : MonoBehaviour {
 
 			land ();
 			if (jump) {
-				body.position += up * 2 * boundcnd;
+				body.position += up * 2 * planetProperties.boundaryCondition;
 				body.velocity += up * jumpSpeed;
 			}
 		} else {
