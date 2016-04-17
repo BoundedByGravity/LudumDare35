@@ -26,10 +26,11 @@ public class Planet : MonoBehaviour {
 	}
 
 	int i = 0;
-
 	void Update() {
-		if (i++ < 500)
+		if (i++ < 100)
 			spawnTrees ();
+		float modifier = Vector3.Distance(Vector3.zero, transform.position) / (core.transform.localScale.x + transform.localScale.x) + 1;
+		transform.RotateAround (Vector3.zero, Vector3.up, Time.deltaTime * modifier);
 	}
 
 	public void spawnTrees() {
@@ -37,4 +38,8 @@ public class Planet : MonoBehaviour {
 		GameObject clone = Instantiate (tree, spawnPos, Quaternion.FromToRotation(Vector3.up, spawnPos - transform.position)) as GameObject;
 		clone.transform.parent = holder.transform;
 	}
+	/*
+	IEnumerator orbit(Vector3 pos) {
+		transform.RotateAround(Vector3.zero, Vector3.up, 20 * Time.deltaTime);
+	}*/
 }
