@@ -7,9 +7,11 @@ public class Planet : MonoBehaviour {
 	public GameObject core;
 	GameObject holder;
 	Mesh mesh;
+	float damping;
 	
 	// Use this for initialization
 	void Start () {
+		damping = Random.Range (200f, 500f);
 		SphereCollider[] colliders = core.GetComponents<SphereCollider> ();
 		SphereCollider collider = null;
 		foreach (SphereCollider col in colliders) {
@@ -40,11 +42,7 @@ public class Planet : MonoBehaviour {
 	}
 
 	public void orbit() {
-		float modifier = Vector3.Distance(Vector3.zero, transform.position) / (core.transform.localScale.x + transform.localScale.x) + 1;
-		transform.RotateAround (Vector3.zero, Vector3.up, Time.deltaTime * modifier * 0);
+		float modifier = Vector3.Distance(Vector3.zero, transform.position) / (damping * core.transform.localScale.x + transform.localScale.x) + 1;
+		transform.RotateAround (Vector3.zero, Vector3.up, Time.deltaTime * modifier);
 	}
-	/*
-	IEnumerator orbit(Vector3 pos) {
-		transform.RotateAround(Vector3.zero, Vector3.up, 20 * Time.deltaTime);
-	}*/
 }
