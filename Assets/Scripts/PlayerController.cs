@@ -141,7 +141,10 @@ public class PlayerController : MonoBehaviour {
 		trajectory = (trajectory - Vector3.Project (trajectory, up)).normalized;
 		camerat = (camerat - Vector3.Project (camerat, up)).normalized;
 		body.rotation = Quaternion.LookRotation (camerat, up);
-
+		if (rotateCharacterInput != 0) {
+			Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (camerat, up).normalized;
+			camerat = (camerat * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180)).normalized;
+		}
 		if (isBound) {
 			// Måns is love, Måns is life
 
@@ -157,22 +160,19 @@ public class PlayerController : MonoBehaviour {
 			Vector3 tradjectoryside = Vector3.Cross (-trajectory, up).normalized;
 			Vector3 sidewaysVector = sidewaysCharacterInput * tradjectoryside;
 
+			float factor = Mathf.Max (Mathf.Abs (forwardCharacterInput), Mathf.Abs (sidewaysCharacterInput));
+
 			// TODO: Do something smoother than 0.7, such as a linear scale depending on how much weight lies forward
-			if (sprint && forwardCharacterInput > 0.7f) {
-				body.velocity = sprintFactor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
+			if (sprint && forwardCharacterInput > Mathf.Abs(sidewaysCharacterInput)) { //To much behviour in comparasion ;)
+				body.velocity = factor * sprintFactor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
 			} else {
-				body.velocity = moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
+				body.velocity = factor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
 			}
 
 			land ();
 			if (jump) {
 				body.position += up * 2 * planetProperties.boundaryCondition;
 				body.velocity += up * jumpSpeed;
-			}
-		} else {
-			if (rotateCharacterInput != 0) {
-				Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (camerat, up).normalized;
-				camerat = camerat * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
 			}
 		}
 	}

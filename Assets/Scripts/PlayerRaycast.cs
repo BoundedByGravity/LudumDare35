@@ -7,16 +7,18 @@ public class PlayerRaycast : MonoBehaviour {
 		const float maxDistance = 5f;
 
 		// Move this into oninput part when done with debugging
-		Vector3 origin = gameObject.transform.position;
-		Vector3 direction = gameObject.transform.forward;
+		Vector3 origin = transform.position - transform.up * transform.localScale.y * .5f;
+		Vector3 direction = transform.forward;
 		Debug.DrawRay (origin, direction*maxDistance, Color.red);
 
-		if (Input.GetMouseButtonDown(0)) {
+		if (Input.GetKeyDown(KeyCode.E)) {
 			Ray ray = new Ray(origin, direction);
 			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit, maxDistance)){
-				if (hit.transform.tag == "life") {
-					print ("Hit lifeform: " + hit.transform.name);
+			int lifeLayer = 1 << LayerMask.NameToLayer ("Life");
+			if (Physics.Raycast(ray, out hit, maxDistance, lifeLayer)){
+				Life life = hit.collider.transform.GetComponent<Life> ();
+				if (life != null) {
+					life.interact (gameObject);
 				}
 			}
 		}
