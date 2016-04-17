@@ -16,7 +16,7 @@ public class Galaxy : MonoBehaviour {
 		float dist = 0;
 		int i = 0;
 		foreach(GameObject planet in planets) {
-			planet.transform.localScale *= 10f * Random.Range(1f, multiplier) * (planets.Count - i++);
+			planet.transform.localScale *= 10f * (planets.Count - i++);
 			Planet p = planet.GetComponent<Planet> ();
 			planet.transform.position = Vector3.right * dist;
 			p.Spawn ("Tree", Random.Range(10,150), .5f);
