@@ -35,7 +35,6 @@ public class PlayerController : MonoBehaviour {
 	[Range (1,20)] public float moveSpeed;
 	[Range (1,20)] public float jumpSpeed;
 	float sprintFactor = 2f;
-	float jumpspeed = 10f;
 	Planet[] planetArray;
 	bool stuck = false;
 
@@ -57,14 +56,6 @@ public class PlayerController : MonoBehaviour {
 
 	Camera firstPersonCam;
 	Camera thirdPersonCam;
-
-	void OnCollisionEnter(Collision collision) {
-		Debug.Log ("Collision enter");
-	}
-
-	void OnCollisionExit(Collision collision) {
-		Debug.Log ("Collision exit");
-	}
 
 	// Use this for initialization
 	void Start () {
@@ -143,8 +134,10 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		bool switchCamera = Input.GetButtonDown("Switch Camera");
-		firstPersonCam.enabled = !firstPersonCam.enabled;
-		thirdPersonCam.enabled = !thirdPersonCam.enabled;
+		if (switchCamera) {
+			firstPersonCam.enabled = !firstPersonCam.enabled;
+			thirdPersonCam.enabled = !thirdPersonCam.enabled;
+		}
 
 		//Camera camera = this.GetComponentInChildren<Camera>();
 		//camera.transform.Rotate (new Vector3 (-dmousey, dmousex, 0));
