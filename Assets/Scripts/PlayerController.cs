@@ -54,6 +54,10 @@ public class PlayerController : MonoBehaviour {
 		return Mathf.Max (0, height + jumpspeed);
 	}
 
+	Vector3 getPlayerUpOnPlanet(Vector3 planetPos) {
+		return (this.transform.position - planetPos).normalized;
+	}
+
 	void FixedUpdate() {
 		float horizontal = Input.GetAxis ("Horizontal");
 		float vertical = Input.GetAxis ("Vertical");
@@ -61,30 +65,28 @@ public class PlayerController : MonoBehaviour {
 
 		bool isBound = isPlanetbound ();
 
-		Debug.Log ("isBound: " + isBound + ", dist: " + Vector3.Distance(body.position, Vector3.zero));
+		//Debug.Log ("isBound: " + isBound + ", dist: " + Vector3.Distance(body.position, Vector3.zero));
 
 		// This line must be before the rest, for whatever reason.
 		body.gameObject.transform.rotation = Quaternion.LookRotation (trajectory, body.position);
 
 		if (isBound && jump) {
-			// Must be "up" relative to player
-			Vector3 up = body.position.normalized;
-			body.position += up*3;
+			// TODO: Use planetpos instead of zero-vector
+			Vector3 up = getPlayerUpOnPlanet(Vector3.zero);
+			body.position += up*1;
 			body.velocity += up*3;
 		} else {
 			if (isBound) {
+				// TODO: Better solution wanted, but better solution hard
+
 				// Måns is love, Måns is life
+				Vector3 trajectory2 = -horizontal * Vector3.Cross (trajectory, body.position.normalized);
+				trajectory = trajectory * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
 
-				//if (horizontal != 0) {
-					Vector3 trajectory2 = -horizontal * Vector3.Cross (trajectory, body.position.normalized);
-					trajectory = trajectory * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
-				/**}
-				if (vertical != 0) {*/
-					body.velocity = (moveSpeed * vertical) * trajectory;
-					trajectory = (trajectory - Vector3.Project (trajectory, body.position)).normalized;
-				//}
+				body.velocity = (moveSpeed * vertical) * trajectory;
+				trajectory = (trajectory - Vector3.Project (trajectory, body.position)).normalized;
 
-				//land ();
+				land ();
 			}
 		}
 	}
