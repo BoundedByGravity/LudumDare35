@@ -23,7 +23,10 @@ public class Galaxy : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		
+		foreach (GameObject obj in planets) {
+			Planet planet = obj.GetComponent<Planet> ();
+			planet.orbit ();
+		}
 	}
 
 	void addPlanets(List<GameObject> planets, int number) {
