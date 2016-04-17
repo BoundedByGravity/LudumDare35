@@ -14,13 +14,19 @@ public class LifeTester : MonoBehaviour {
 			lives.Add (lifeArray [i].GetComponent<Life>());
 			print ("Lifeform found " + lifeArray[i]);
 		}
-		foreach(Life life in lives) {
-			life.interact (gameObject);
-		}
 	}
-	
+
+	float timer = 2f;
+	float time = 2f;
 	// Update is called once per frame
 	void Update () {
-	
+		time -= Time.deltaTime;
+		if (time < 0) {
+			foreach(Life life in lives) {
+				if (life != null)
+					life.interact (gameObject);
+			}
+			time = timer;
+		}
 	}
 }
