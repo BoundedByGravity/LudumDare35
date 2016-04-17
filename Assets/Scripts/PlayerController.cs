@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour {
 	[Range (1,20)] public float moveSpeed;
 	[Range (1,20)] public float jumpSpeed;
 	float jumpspeed;
+	float boundcnd;
+	float landradius;
 
 
 	float degree_rotation = 3;
@@ -24,6 +26,8 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		moveSpeed = 7f;
 		jumpSpeed = 3f;
+		boundcnd = radius/100f;
+		landradius = radius * 1.005f;
 		body = this.gameObject.GetComponent<Rigidbody> ();
 		//jumping = false;
 		//prevAddedMoveVelocity = new Vector3 (0, 0, 0);
@@ -37,11 +41,11 @@ public class PlayerController : MonoBehaviour {
 	bool isPlanetbound() {
 		// TODO: Use radius from closest planet or use a trigger to detect landing on a planet
 		float dist = Vector3.Distance (body.position, Vector3.zero);
-		return dist < radius + 0.2;
+		return dist < landradius + boundcnd;
 	}
 
 	void land() {
-		body.position = body.position.normalized * (radius+0.1f);
+		body.position = body.position.normalized * landradius;
 	}
 
 	Vector3 getPlayerUpOnPlanet(Vector3 planetPos) {
@@ -76,7 +80,7 @@ public class PlayerController : MonoBehaviour {
 				// TODO: Use planetpos instead of zero-vector
 				// This line must be before the rest, for whatever reason.
 
-				body.position += up * .2f;
+				body.position += up * 2 * boundcnd;
 				body.velocity += up * jumpSpeed;
 			}
 
