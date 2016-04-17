@@ -6,18 +6,14 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	Rigidbody body;
-	GravitySink gravitySink;
-
 	// Initial trajectory vector, will change
 	Vector3 trajectory = new Vector3 (0, 0, 1);
 
 	// Constants
 	float radius = 26;	// TODO: Load from radius of parent
-	float moveSpeed = 7f;
-	float jumpSpeed = 3f;
-	bool jumping;
+	[Range (1,20)] public float moveSpeed;
+	[Range (1,20)] public float jumpSpeed;
 	float jumpspeed;
-	float height;
 
 
 	float degree_rotation = 3;
@@ -26,8 +22,9 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		moveSpeed = 7f;
+		jumpSpeed = 3f;
 		body = this.gameObject.GetComponent<Rigidbody> ();
-		gravitySink = this.gameObject.GetComponent<GravitySink> ();
 		//jumping = false;
 		//prevAddedMoveVelocity = new Vector3 (0, 0, 0);
 	}
