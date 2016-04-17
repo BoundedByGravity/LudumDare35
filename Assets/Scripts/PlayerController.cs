@@ -185,7 +185,7 @@ public class PlayerController : MonoBehaviour {
 	void alignFirstPersonCamera(float pitchCharacterInput) {
 		// TODO: This wont be the first person camera always
 		Camera[] cameras = this.GetComponentsInChildren<Camera> ();
-		Debug.Log ("The first chosen camera is: " + cameras[0].name);
+		//Debug.Log ("The first chosen camera is: " + cameras[0].name);
 		Camera firstPersonCam = cameras [0];
 		firstPersonCam.transform.Rotate(new Vector3(-pitchCharacterInput, 0, 0));
 		float currentPitch = firstPersonCam.transform.localRotation.eulerAngles.x;
