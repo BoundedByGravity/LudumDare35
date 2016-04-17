@@ -13,16 +13,16 @@ public class GravitySink : MonoBehaviour {
 		body = GetComponent<Rigidbody> ();
 	}
 
-	void setForce(Vector3 force) {
+	public void addForce(Vector3 force) {
 		this.force = force;
+	}
+
+	public void setAutoApply(bool autoApply) {
+		this.autoApply = autoApply;
 	}
 	
 	Vector3 getForce() {
 		return force;
-	}
-
-	void setAutoApply(bool autoApply) {
-		this.autoApply = autoApply;
 	}
 
 	void FixedUpdate() {
