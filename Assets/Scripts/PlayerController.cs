@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour {
 		boundcnd = radius/100f;
 		landradius = radius * 1.005f;
 		body = this.gameObject.GetComponent<Rigidbody> ();
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
 		//jumping = false;
 		//prevAddedMoveVelocity = new Vector3 (0, 0, 0);
 	}
@@ -62,6 +64,16 @@ public class PlayerController : MonoBehaviour {
 		float vertical = Input.GetAxis ("Vertical");
 		bool jump = Input.GetButtonDown("Jump");
 
+		bool cancel = Input.GetButtonDown("Cancel");
+		if (cancel) {
+			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
+				Cursor.lockState = CursorLockMode.None;
+			} else {
+				Cursor.lockState = CursorLockMode.Locked;
+			}
+			Cursor.visible = !Cursor.visible;
+		}
+
 		float dmousex = Input.GetAxis ("Mouse X");
 		float dmousey = Input.GetAxis ("Mouse Y");
 		Camera camera = this.GetComponentInChildren<Camera>();
@@ -82,8 +94,8 @@ public class PlayerController : MonoBehaviour {
 			// TODO: Better solution wanted, but better solution hard
 
 			// Måns is love, Måns is life
-			if (horizontal != 0) {
-				Vector3 trajectory2 = -horizontal * Vector3.Cross (trajectory, up).normalized;
+			if (dmousex != 0) {
+				Vector3 trajectory2 = -dmousex * Vector3.Cross (trajectory, up).normalized;
 				trajectory = trajectory * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
 			}
 
