@@ -130,11 +130,13 @@ public class PlayerController : MonoBehaviour {
 			Vector3 tradjectoryside = Vector3.Cross (-trajectory, up).normalized;
 			Vector3 sidewaysVector = sidewaysCharacterInput * tradjectoryside;
 
+			float factor = Mathf.Max (Mathf.Abs (forwardCharacterInput), Mathf.Abs (sidewaysCharacterInput));
+
 			// TODO: Do something smoother than 0.7, such as a linear scale depending on how much weight lies forward
-			if (sprint && forwardCharacterInput > 0.7f) {
-				body.velocity = sprintFactor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
+			if (sprint && forwardCharacterInput > Mathf.Abs(sidewaysCharacterInput)) { //To much behviour in comparasion ;)
+				body.velocity = factor * sprintFactor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
 			} else {
-				body.velocity = moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
+				body.velocity = factor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
 			}
 
 			land ();
