@@ -22,10 +22,15 @@ public class PlayerController : MonoBehaviour {
 	float boundcnd;
 	float landradius;
 
+	float deltaMouseX = 0;
+	float deltaMouseY = 0;
 
 	float degree_rotation = 3;
 	//Vector3 prevAddedMoveVelocity;
 	//GravitySink gravitySink;
+
+	const CursorLockMode cursorLockModeHidden = CursorLockMode.Confined;
+	const CursorLockMode cursorLockModeVisible = CursorLockMode.None;
 
 	// Use this for initialization
 	void Start () {
@@ -34,7 +39,7 @@ public class PlayerController : MonoBehaviour {
 		boundcnd = radius/100f;
 		landradius = radius * 1.005f;
 		body = this.gameObject.GetComponent<Rigidbody> ();
-		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.lockState = cursorLockModeHidden;
 		Cursor.visible = false;
 		//jumping = false;
 		//prevAddedMoveVelocity = new Vector3 (0, 0, 0);
@@ -43,6 +48,8 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// TODO: Figure out what should go here
+		deltaMouseX += Input.GetAxis ("Mouse X");
+		deltaMouseY += Input.GetAxis ("Mouse Y");
 	}
 
 	bool isPlanetbound() {
@@ -60,22 +67,19 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		float horizontal = Input.GetAxis ("Horizontal");
-		float vertical = Input.GetAxis ("Vertical");
+		float horizontalLeftStick = Input.GetAxis ("Horizontal");
+		float verticalLeftStick = Input.GetAxis ("Vertical");
 		bool jump = Input.GetButtonDown("Jump");
 
 		bool cancel = Input.GetButtonDown("Cancel");
 		if (cancel) {
 			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
-				Cursor.lockState = CursorLockMode.None;
+				Cursor.lockState = cursorLockModeVisible;
 			} else {
-				Cursor.lockState = CursorLockMode.Locked;
+				Cursor.lockState = cursorLockModeHidden;
 			}
 			Cursor.visible = !Cursor.visible;
 		}
-
-		float dmousex = Input.GetAxis ("Mouse X");
-		float dmousey = Input.GetAxis ("Mouse Y");
 		Camera camera = this.GetComponentInChildren<Camera>();
 		//camera.transform.Rotate (new Vector3 (-dmousey, dmousex, 0));
 
@@ -83,6 +87,14 @@ public class PlayerController : MonoBehaviour {
 			//Instantiate (bullet, transform.position, transform.rotation);
 		}
 
+		float forwardCharacterInput = verticalLeftStick;
+		float sidewaysCharacterInput = horizontalLeftStick;
+		float rotateCharacterInput = deltaMouseX; deltaMouseX = 0;
+
+		movePlayer (forwardCharacterInput, sidewaysCharacterInput, rotateCharacterInput, jump);
+	}
+
+	void movePlayer(float forwardCharacterInput, float sidewaysCharacterInput, float rotateCharacterInput, bool jump) {
 		bool isBound = isPlanetbound ();
 		Vector3 up = getPlayerUpOnPlanet (Vector3.zero);
 
@@ -94,25 +106,25 @@ public class PlayerController : MonoBehaviour {
 			// TODO: Better solution wanted, but better solution hard
 
 			// Måns is love, Måns is life
-			if (dmousex != 0) {
-				Vector3 trajectory2 = -dmousex * Vector3.Cross (trajectory, up).normalized;
+			if (rotateCharacterInput != 0) {
+				Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (trajectory, up).normalized;
 				trajectory = trajectory * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
 			}
 
-			body.velocity = (moveSpeed * vertical) * trajectory;
+			// Moves the character forward/backwards
+			Vector3 forwardSpeed = (moveSpeed * forwardCharacterInput) * trajectory;
+
+			// Moves the character sideways
+			//Vector3 sidewaySpeed = ?
+
+			body.velocity = forwardSpeed; // + sidewaySpeed;
 
 			land ();
 			if (jump) {
-				// TODO: Use planetpos instead of zero-vector
-				// This line must be before the rest, for whatever reason.
-
 				body.position += up * 2 * boundcnd;
 				body.velocity += up * jumpSpeed;
 			}
 
 		}
-
-
-
 	}
 }
