@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour {
 	Rigidbody body;
 	GravitySink gravitySink;
 
+	GameObject bullet;
+
 	// Initial trajectory vector, will change
 	Vector3 trajectory = new Vector3 (0, 0, 1);
 
@@ -62,6 +64,15 @@ public class PlayerController : MonoBehaviour {
 		float vertical = Input.GetAxis ("Vertical");
 		bool jump = Input.GetButtonDown("Jump");
 
+		float dmousex = Input.GetAxis ("Mouse X");
+		float dmousey = Input.GetAxis ("Mouse Y");
+		Camera camera = this.GetComponentInChildren<Camera>();
+		//camera.transform.Rotate (new Vector3 (-dmousey, dmousex, 0));
+
+		if (Input.GetButtonDown ("Fire1")) {
+			//Instantiate (bullet, transform.position, transform.rotation);
+		}
+
 		bool isBound = isPlanetbound ();
 
 		//Debug.Log ("isBound: " + isBound + ", dist: " + Vector3.Distance(body.position, Vector3.zero));
@@ -78,7 +89,7 @@ public class PlayerController : MonoBehaviour {
 				// TODO: Better solution wanted, but better solution hard
 
 				// Måns is love, Måns is life
-				Vector3 trajectory2 = -horizontal * Vector3.Cross (trajectory, body.position).normalized;
+				Vector3 trajectory2 = -dmousex * Vector3.Cross (trajectory, body.position).normalized;
 				trajectory = trajectory * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
 
 				trajectory = (trajectory - Vector3.Project (trajectory, body.position)).normalized;
