@@ -5,7 +5,7 @@ using System.Collections;
 public class Planet : MonoBehaviour {
 
 	public GameObject core;
-	GameObject tree, holder;
+	GameObject holder;
 	Mesh mesh;
 	
 	// Use this for initialization
@@ -16,7 +16,6 @@ public class Planet : MonoBehaviour {
 			if (!col.isTrigger)
 				collider = col;
 		}
-		tree = Resources.Load ("Gran") as GameObject;
 		holder = new GameObject ("Generated");
 		holder.transform.parent = this.transform;
 		holder.transform.localScale = Vector3.one;
@@ -25,15 +24,15 @@ public class Planet : MonoBehaviour {
 		mesh = core.GetComponent<MeshFilter> ().mesh;
 	}
 
-	public void SpawnTrees(int number, float speed) {
-		StartCoroutine (CoSpawnTrees (number, speed));
+	public void Spawn(string type, int number, float speed) {
+		StartCoroutine (Spawner (type, number, speed));
 	}
 
-	IEnumerator CoSpawnTrees(int number, float speed) {
+	IEnumerator Spawner(string type, int number, float speed) {
 		while(number > 0) {
 			yield return new WaitForSeconds(speed);
 			Vector3 spawnPos = mesh.vertices [Random.Range(0, mesh.vertices.Length)] * core.transform.localScale.x * transform.localScale.x + core.transform.position;
-			GameObject clone = Instantiate (tree, spawnPos, Quaternion.FromToRotation(Vector3.up, spawnPos - transform.position)) as GameObject;
+			GameObject clone = Instantiate (Resources.Load(type), spawnPos, Quaternion.FromToRotation(Vector3.up, spawnPos - transform.position)) as GameObject;
 			clone.transform.parent = holder.transform;
 			number--;
 			yield return null;

@@ -17,7 +17,8 @@ public class Galaxy : MonoBehaviour {
 			planet.transform.localScale *= Random.Range(1f, multiplier) * (planets.Count - i++);
 			Planet p = planet.GetComponent<Planet> ();
 			planet.transform.position = Vector3.right * dist;
-			p.SpawnTrees (150, .5f);
+			p.Spawn ("Gran", Random.Range(10,150), .5f);
+			p.Spawn ("WaterWell", Random.Range (10, 20), .4f);
 			dist += p.transform.localScale.x * p.core.transform.localScale.x * 2 * multiplier;
 		}
 	}

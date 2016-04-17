@@ -16,6 +16,18 @@ public abstract class Life : MonoBehaviour {
 		}
 	}
 
+	protected IEnumerator Popdown(GameObject player, float time) {
+		Destroy (gameObject, time);
+		Vector3 toPos = transform.localPosition - transform.up;
+		float pastTime = 0;
+		while (pastTime < time) {
+			pastTime += Time.deltaTime;
+			transform.localScale = Vector3.Lerp (transform.localScale, Vector3.zero, pastTime);
+			transform.localPosition = Vector3.Lerp (transform.localPosition, toPos, pastTime);
+			yield return null;
+		}
+	}
+
 	protected IEnumerator fadeOutAndDestroy(GameObject obj, float time) {
 		Destroy (obj, time);
 		//Fade childs if possible
