@@ -126,8 +126,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   core: {fileID: 134704}
-  spawnObject: {fileID: 0}
-  spawnNumber: 10
 --- !u!114 &11455410
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -162,7 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnObject: {fileID: 179402, guid: 49506a295a7804662b7c2d73b4809fee, type: 2}
-  spawnNumber: 200
+  spawnNumber: 0
 --- !u!114 &114000012873003476
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -174,7 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6192bf3e72edd4d5eb13af1863e1b7d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planet: {fileID: 0}
+  bodyToOrbit: {fileID: 0}
   orbitSpeed: 0.001
 --- !u!135 &135000010401283264
 SphereCollider:
