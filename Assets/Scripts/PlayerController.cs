@@ -54,6 +54,8 @@ public class PlayerController : MonoBehaviour {
 	public Planet planet;
 	PlanetProperties planetProperties;
 
+	Animator animator;
+
 	// Use this for initialization
 	void Start () {
 		// Initialize cursor lock
@@ -74,6 +76,11 @@ public class PlayerController : MonoBehaviour {
 		if(this.planet != null) {
 			setPlanet (this.planet);
 		}
+
+		animator = this.GetComponentInChildren<Animator> ();
+
+		// Initializes the camera
+		nextCamera ();
 	}
 
 	public void setPlanet(Planet p) {
@@ -261,6 +268,10 @@ public class PlayerController : MonoBehaviour {
 				body.velocity = factor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
 			}
 
+			if (forwardCharacterInput > 0) {
+				animator.Play("Walking");
+			}
+
 			if (isBound) {
 				land ();
 			}
@@ -271,7 +282,5 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			gravitySink.setAcceptsForce (true);
 		}
-
-
 	}
 }
