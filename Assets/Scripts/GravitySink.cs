@@ -7,6 +7,7 @@ public class GravitySink : MonoBehaviour {
 	bool autoApply = true;
 	Rigidbody body;
 	Vector3 force;
+	Vector3 prevForce;
 
 	// Use this for initialization
 	void Start () {
@@ -21,14 +22,18 @@ public class GravitySink : MonoBehaviour {
 		this.autoApply = autoApply;
 	}
 	
-	Vector3 getForce() {
-		return force;
+	/*public Vector3 getForce() {
+		return force == Vector3.zero? prevForce : force;
 	}
 
 	void FixedUpdate() {
-		if (autoApply) {
-			this.body.AddForce (this.force);
-		}
+		this.prevForce = force;
 		this.force = Vector3.zero;
+	}*/
+	void FixedUpdate() {
+		if (autoApply) {
+			body.AddForce (force);
+		}
+		force = Vector3.zero;
 	}
 }

@@ -10,8 +10,8 @@ struct PlanetProperties {
 	public PlanetProperties(Planet p, float playerHeight) {
 		float radius = p.transform.localScale.x;
 		this.radius = playerHeight/2 + radius;
-		this.boundaryCondition = 0.01f;
-		this.landRadius = this.radius + 0.2f;
+		this.boundaryCondition = 0.2f;
+		this.landRadius = this.radius + 0.4f;
 		this.position = p.transform.position;
 	}
 }
@@ -129,9 +129,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-
-
-
 		bool cancel = Input.GetButtonDown("Cancel");
 		if (cancel) {
 			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
@@ -141,7 +138,7 @@ public class PlayerController : MonoBehaviour {
 			}
 			Cursor.visible = !Cursor.visible;
 		}
-			
+
 		bool switchCamera = Input.GetButtonDown("Switch Camera");
 		if (switchCamera) {
 			Camera[] cameras = this.GetComponentsInChildren<Camera> ();
