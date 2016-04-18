@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour {
 
 		planetArray = Component.FindObjectsOfType<Planet> ();
 		body = this.gameObject.GetComponent<Rigidbody> ();
-		trajectory = new Vector3 (0, 0, 1);
+		trajectory = body.transform.rotation * Vector3.forward;
 		moveSpeed = 5f;
 		jumpSpeed = 10f;
 
