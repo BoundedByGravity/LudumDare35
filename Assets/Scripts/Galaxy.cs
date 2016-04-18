@@ -39,6 +39,8 @@ public class Galaxy : MonoBehaviour {
 			dist += 100 + p.transform.localScale.x * 2 * multiplier;
 			i++;
 		}
+
+		planets.Last.Value.GetComponent<PopulatePlanet> ().Spawn (Resources.Load ("TheShapeShiftBox"), 1, 1f);
 		//player.GetComponent<PlayerController> ().planet = planets.First.Value;
 		player.GetComponent<PlayerController> ().setPlanet (planets.First.Value.GetComponent<Planet>());
 	}
