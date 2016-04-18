@@ -3,11 +3,12 @@ using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 public class GravitySink : MonoBehaviour {
-
-	bool autoApply = true;
 	Rigidbody body;
 	Vector3 force;
 	Vector3 prevForce;
+
+	bool acceptsForce = true;
+	bool autoApply = true;
 
 	// Use this for initialization
 	void Start () {
@@ -15,7 +16,16 @@ public class GravitySink : MonoBehaviour {
 	}
 
 	public void addForce(Vector3 force) {
-		this.force += force;
+		// TODO: There is no need to even calculate the force if it is never applied
+		//       So the logic that calculates gravity should probably take the enabled
+		//	     state of the GravitySink into consideration.
+		if (acceptsForce) {
+			this.force += force;
+		}
+	}
+
+	public void setAcceptsForce(bool acceptsForce) {
+		this.acceptsForce = acceptsForce;
 	}
 
 	public void setAutoApply(bool autoApply) {
@@ -33,7 +43,7 @@ public class GravitySink : MonoBehaviour {
 	void FixedUpdate() {
 		if (autoApply) {
 			body.AddForce (force);
+			force = Vector3.zero;
 		}
-		force = Vector3.zero;
 	}
 }

@@ -227,10 +227,15 @@ public class PlayerController : MonoBehaviour {
 			camerat = (camerat * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180)).normalized;
 		}
 
+		GravitySink gravitySink = this.GetComponent<GravitySink> ();
+
 		if (isBound || stuck) {
 			// Måns is love, Måns is life
 			// We should only do this when grounded, otherwise jumping will be weird
 			// Also, we should inherit the planet velocity when grounded and jumping
+
+			// Don't apply gravity when grounded
+			gravitySink.setAcceptsForce (false);
 
 			// Calculate how much the planet has moved since last cycle, and move the player along with it.
 			Vector3 dv = planet.transform.position - planetProperties.position;
@@ -258,13 +263,14 @@ public class PlayerController : MonoBehaviour {
 			} else {
 				body.velocity = factor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
 			}
-			if (isBound) {
-				land ();
-			}
+			land ();
+
 			if (jump) {
 				body.position += up * 2 * planetProperties.boundaryCondition;
 				body.velocity += up * jumpSpeed;
 			}
+		} else {
+			gravitySink.setAcceptsForce (true);
 		}
 
 
