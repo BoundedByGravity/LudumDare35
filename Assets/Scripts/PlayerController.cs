@@ -10,8 +10,8 @@ struct PlanetProperties {
 	public PlanetProperties(Planet p, float playerHeight) {
 		float radius = p.transform.localScale.x;
 		this.radius = playerHeight/2 + radius;
-		this.boundaryCondition = 0.01f;
-		this.landRadius = this.radius + 0.2f;
+		this.boundaryCondition = 0.2f;
+		this.landRadius = this.radius + 0.4f;
 		this.position = p.transform.position;
 	}
 }
@@ -133,7 +133,13 @@ public class PlayerController : MonoBehaviour {
 
 		// We should only do this when grounded, otherwise jumping will be weird
 		// Also, we should inherit the planet velocity when grounded and jumping
+		// And the tradjectoryvector maybe.
 		this.transform.position += dv;
+		//Something like this: but it doesnt seem to work, does the FixedUpdate happen for the GS before the player? I then think we should apply the force from here.
+		/*bool isBound = isPlanetbound ();
+		if (!isBound) {
+			this.body.AddForce (gravitySink.getForce());
+		}*/
 
 
 		bool cancel = Input.GetButtonDown("Cancel");
