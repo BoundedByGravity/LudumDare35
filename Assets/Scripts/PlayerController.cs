@@ -260,8 +260,10 @@ public class PlayerController : MonoBehaviour {
 			} else {
 				body.velocity = factor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
 			}
-			land ();
 
+			if (isBound) {
+				land ();
+			}
 			if (jump) {
 				body.position += up * 2 * planetProperties.boundaryCondition;
 				body.velocity += up * jumpSpeed;
