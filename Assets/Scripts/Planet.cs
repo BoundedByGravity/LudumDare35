@@ -12,8 +12,6 @@ public class Planet : MonoBehaviour {
 		get;
 		private set;
 	}
-
-	Mesh mesh;
 	
 	// Use this for initialization
 	void Start () {
@@ -21,7 +19,5 @@ public class Planet : MonoBehaviour {
 		holder.transform.parent = this.transform;
 		holder.transform.localScale = Vector3.one;
 		holder.transform.localPosition = Vector3.zero;
-
-		mesh = core.GetComponent<MeshFilter> ().mesh;
 	}
 }
