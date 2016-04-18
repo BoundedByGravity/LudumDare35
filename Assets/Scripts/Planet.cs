@@ -59,7 +59,7 @@ public class Planet : MonoBehaviour {
 
 	[System.Obsolete("Use Orbit instead")]
 	public void orbit() {
-		float modifier = Vector3.Distance(Vector3.zero, transform.position) / (damping * core.transform.localScale.x + transform.localScale.x) + 1;
-		transform.RotateAround (Vector3.zero, Vector3.up, Time.deltaTime * modifier);
+		float modifier = Vector3.Distance(Vector3.zero, transform.position) * core.transform.localScale.x + transform.localScale.x + 1;
+		transform.RotateAround (Vector3.zero, Vector3.up, Time.deltaTime * 100f / modifier);
 	}
 }
