@@ -97,6 +97,21 @@ public class PlayerController : MonoBehaviour {
 		// TODO: Figure out what should go here
 		deltaMouseX += Input.GetAxis ("Mouse X");
 		deltaMouseY += Input.GetAxis ("Mouse Y");
+
+		bool switchCamera = Input.GetButtonDown("Switch Camera");
+		if (switchCamera) {
+			nextCamera ();
+		}
+
+		bool cancel = Input.GetButtonDown("Cancel");
+		if (cancel) {
+			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
+				Cursor.lockState = cursorLockModeVisible;
+			} else {
+				Cursor.lockState = cursorLockModeHidden;
+			}
+			Cursor.visible = !Cursor.visible;
+		}
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -132,40 +147,30 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void FixedUpdate() {
-		bool cancel = Input.GetButtonDown("Cancel");
-		if (cancel) {
-			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
-				Cursor.lockState = cursorLockModeVisible;
-			} else {
-				Cursor.lockState = cursorLockModeHidden;
+	void nextCamera() {
+		Camera[] cameras = this.GetComponentsInChildren<Camera> ();
+		int i = 0;
+		int nextEnabled = 0;
+		foreach(Camera camera in cameras) {
+			if (camera.enabled) {
+				camera.enabled = false;
+				nextEnabled = (i + 1) % cameras.Length;
 			}
-			Cursor.visible = !Cursor.visible;
+			i++;
 		}
+		//Debug.Log ("Switching to camera " + nextEnabled);
+		cameras [nextEnabled].enabled = true;
+	}
 
-		bool switchCamera = Input.GetButtonDown("Switch Camera");
-		if (switchCamera) {
-			Camera[] cameras = this.GetComponentsInChildren<Camera> ();
-			int i = 0;
-			int nextEnabled = 0;
-			foreach(Camera camera in cameras) {
-				Debug.Log ("Camera " + i + " enabled: " + camera.enabled);
-				if (camera.enabled) {
-					camera.enabled = false;
-					nextEnabled = (i + 1) % cameras.Length;
-					break;
-				}
-				i++;
-			}
-			cameras [nextEnabled].enabled = true;
-		}
+	void FixedUpdate() {
+
 
 		float horizontalLeftStick = Input.GetAxis ("Horizontal");
 		float verticalLeftStick = Input.GetAxis ("Vertical");
 
 		//Debug.Log (horizontalLeftStick + " " + verticalLeftStick);
 
-		bool jump = Input.GetButtonDown("Jump");
+		bool jump = Input.GetButton("Jump");
 		bool sprint = Input.GetButton ("Sprint");
 
 		float forwardCharacterInput = verticalLeftStick;

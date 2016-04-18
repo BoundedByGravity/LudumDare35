@@ -21,8 +21,11 @@ public class TheShapeShiftBox : Life {
 
 	public override void interact(GameObject player) {
 		print ("Hi");
-		player.GetComponent<PlayerController> ().moveSpeed = 0;
-		Destroy (player.transform.FindChild ("human").gameObject);
+		//player.GetComponent<PlayerController> ().moveSpeed = 0;
+		GameObject human = player.transform.FindChild("human").gameObject;
+		if (human != null) {
+			Destroy (human);
+		}
 		player.GetComponentInChildren<AudioSource> ().Stop ();
 
 		GameObject box = Instantiate (Resources.Load ("TheShapeShiftBox"), player.transform.position, player.transform.rotation) as GameObject;

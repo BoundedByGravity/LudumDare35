@@ -11,7 +11,7 @@ public class PlayerRaycast : MonoBehaviour {
 		Vector3 direction = transform.forward;
 		Debug.DrawRay (origin, direction*maxDistance, Color.red);
 
-		if (Input.GetKeyDown(KeyCode.E)) {
+		if (Input.GetButton("Interact")) {
 			Ray ray = new Ray(origin, direction);
 			RaycastHit hit;
 			int lifeLayer = 1 << LayerMask.NameToLayer ("Life");
