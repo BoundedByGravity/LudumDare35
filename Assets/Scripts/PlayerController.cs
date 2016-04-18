@@ -136,15 +136,23 @@ public class PlayerController : MonoBehaviour {
 			}
 			Cursor.visible = !Cursor.visible;
 		}
-
-		/*
+			
 		bool switchCamera = Input.GetButtonDown("Switch Camera");
 		if (switchCamera) {
-			foreach(Camera camera in this.GetComponentsInChildren<Camera>()) {
-				camera.enabled = !camera.enabled;
+			Camera[] cameras = this.GetComponentsInChildren<Camera> ();
+			int i = 0;
+			int nextEnabled = 0;
+			foreach(Camera camera in cameras) {
+				Debug.Log ("Camera " + i + " enabled: " + camera.enabled);
+				if (camera.enabled) {
+					camera.enabled = false;
+					nextEnabled = (i + 1) % cameras.Length;
+					break;
+				}
+				i++;
 			}
-			}
-		*/
+			cameras [nextEnabled].enabled = true;
+		}
 
 		float horizontalLeftStick = Input.GetAxis ("Horizontal");
 		float verticalLeftStick = Input.GetAxis ("Vertical");
