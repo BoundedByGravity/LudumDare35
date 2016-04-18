@@ -14,7 +14,7 @@ public class GravitySink : MonoBehaviour {
 	}
 
 	public void addForce(Vector3 force) {
-		this.force = force;
+		this.force += force;
 	}
 
 	public void setAutoApply(bool autoApply) {
@@ -29,5 +29,6 @@ public class GravitySink : MonoBehaviour {
 		if (autoApply) {
 			this.body.AddForce (this.force);
 		}
+		this.force = Vector3.zero;
 	}
 }

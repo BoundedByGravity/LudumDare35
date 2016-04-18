@@ -11,6 +11,7 @@ public class PopulatePlanet : MonoBehaviour {
 
 	public GameObject spawnObject;
 	public int spawnNumber = 10;
+	System.Random random = new System.Random(0);
 
 	// Use this for initialization
 	void Start () {
@@ -31,7 +32,7 @@ public class PopulatePlanet : MonoBehaviour {
 	IEnumerator Spawner(Object obj, int number, float speed) {
 		while(number > 0) {
 			yield return new WaitForSeconds(speed);
-			Vector3 spawnPos = mesh.vertices [Random.Range(0, mesh.vertices.Length)] 
+			Vector3 spawnPos = mesh.vertices [random.Next(0, mesh.vertices.Length)] 
 								* planet.core.transform.localScale.x 
 								* transform.localScale.x + planet.core.transform.position;
 			GameObject clone = Instantiate (obj, spawnPos, Quaternion.FromToRotation(Vector3.up, spawnPos - transform.position)) as GameObject;

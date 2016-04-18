@@ -7,9 +7,9 @@ struct PlanetProperties {
 	public float landRadius;
 	public Vector3 position;
 
-	public PlanetProperties(Planet p, float playerheight) {
+	public PlanetProperties(Planet p, float playerHeight) {
 		float radius = p.transform.localScale.x;
-		this.radius = playerheight/2 + radius;
+		this.radius = playerHeight/2 + radius;
 		this.boundaryCondition = 0.01f;
 		this.landRadius = this.radius + 0.2f;
 		this.position = p.transform.position;
@@ -127,6 +127,15 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
+		Vector3 dv = planet.transform.position - planetProperties.position;
+
+		planetProperties = new PlanetProperties (planet, playerHeight);
+
+		// We should only do this when grounded, otherwise jumping will be weird
+		// Also, we should inherit the planet velocity when grounded and jumping
+		this.transform.position += dv;
+
+
 		bool cancel = Input.GetButtonDown("Cancel");
 		if (cancel) {
 			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
