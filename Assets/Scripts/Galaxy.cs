@@ -20,10 +20,10 @@ public class Galaxy : MonoBehaviour {
 			planet.GetComponent<Rigidbody> ().mass = planet.transform.localScale.x * 120f * (planets.Count - i++);
 			Planet p = planet.GetComponent<Planet> ();
 			planet.transform.position = Vector3.right * dist;
-			p.Spawn ("Tree", Random.Range(10,150), .5f);
-			p.Spawn ("WaterWell", Random.Range (10, 20), .4f);
-			p.Spawn ("Stone", Random.Range (10, 20), .4f);
-			p.Spawn ("Baker_house", Random.Range (2, 5), .4f);
+			p.Spawn (Resources.Load("Tree"), Random.Range(10,150), .5f);
+			p.Spawn (Resources.Load("WaterWell"), Random.Range (10, 20), .4f);
+			p.Spawn (Resources.Load("Stone"), Random.Range (10, 20), .4f);
+			p.Spawn (Resources.Load("Baker_house"), Random.Range (2, 5), .4f);
 			dist += p.transform.localScale.x * p.core.transform.localScale.x * 2 * multiplier;
 		}
 		//player.GetComponent<PlayerController> ().planet = planets.First.Value;

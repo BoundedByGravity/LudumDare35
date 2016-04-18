@@ -121,7 +121,7 @@ Material:
       second: 1
     - first:
         name: _UVSec
-      second: 0
+      second: 1
     - first:
         name: _ZWrite
       second: 1
