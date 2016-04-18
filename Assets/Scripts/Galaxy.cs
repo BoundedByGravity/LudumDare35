@@ -42,16 +42,6 @@ public class Galaxy : MonoBehaviour {
 		//player.GetComponent<PlayerController> ().planet = planets.First.Value;
 		player.GetComponent<PlayerController> ().setPlanet (planets.First.Value.GetComponent<Planet>());
 	}
-		
-	// This should no longer be needed
-	/*
-	void Update () {
-		foreach (GameObject obj in planets) {
-			Planet planet = obj.GetComponent<Planet> ();
-			planet.orbit ();
-		}
-	}
-	*/
 
 	void addPlanets(LinkedList<GameObject> planets, int number) {
 		for (int i = 0; i < number; i++) {
