@@ -34,7 +34,7 @@ public class GravitySource : MonoBehaviour {
 			Rigidbody body = sinkObj.gameObject.GetComponent<Rigidbody> ();
 			Vector3 normVectorToPlayer = (this.transform.position - body.transform.position).normalized;
 			float dist = Vector3.Distance (this.transform.position, body.transform.position);
-			Vector3 force = normVectorToPlayer * gravityConstant * gameObject.GetComponent<Rigidbody> ().mass * body.mass / (dist * dist);
+			Vector3 force = normVectorToPlayer * gravityConstant * gameObject.GetComponent<Rigidbody> ().mass * body.mass / (dist * Mathf.Sqrt(dist));
 			sinkObj.addForce (force);
 		}
 	}
