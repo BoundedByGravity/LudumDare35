@@ -62,13 +62,15 @@ public class PlayerController : MonoBehaviour {
 
 		planetArray = Component.FindObjectsOfType<Planet> ();
 		body = this.gameObject.GetComponent<Rigidbody> ();
+
+		// Assumes the player is starting in the upward position, above a planet (x, y+k*radius, z)
 		trajectory = body.transform.rotation * Vector3.forward;
+
 		moveSpeed = 5f;
 		jumpSpeed = 10f;
 
 		BoxCollider collider = body.GetComponent<BoxCollider> ();
 		playerHeight = 2*collider.bounds.extents.y;
-		Debug.Log (playerHeight);
 
 		camerat = trajectory;
 
@@ -127,13 +129,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		Vector3 dv = planet.transform.position - planetProperties.position;
 
-		planetProperties = new PlanetProperties (planet, playerHeight);
-
-		// We should only do this when grounded, otherwise jumping will be weird
-		// Also, we should inherit the planet velocity when grounded and jumping
-		this.transform.position += dv;
 
 
 		bool cancel = Input.GetButtonDown("Cancel");
@@ -236,6 +232,14 @@ public class PlayerController : MonoBehaviour {
 
 		if (isBound || stuck) {
 			// Måns is love, Måns is life
+			// We should only do this when grounded, otherwise jumping will be weird
+			// Also, we should inherit the planet velocity when grounded and jumping
+
+			// Calculate how much the planet has moved since last cycle, and move the player along with it.
+			Vector3 dv = planet.transform.position - planetProperties.position;
+			planetProperties = new PlanetProperties (planet, playerHeight);
+			this.transform.position += dv;
+
 
 			trajectory = camerat;
 			if (rotateCharacterInput != 0) {

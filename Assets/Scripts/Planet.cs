@@ -14,30 +14,15 @@ public class Planet : MonoBehaviour {
 	}
 
 	Mesh mesh;
-	float damping;
-
-	public GameObject spawnObject;
-	public int spawnNumber = 10;
 	
 	// Use this for initialization
 	void Start () {
-		damping = Random.Range (200f, 500f);
-		Collider[] colliders = core.GetComponents<Collider> ();
-		Collider collider = null;
-		foreach (SphereCollider col in colliders) {
-			if (!col.isTrigger)
-				collider = col;
-		}
 		holder = new GameObject ("Generated");
 		holder.transform.parent = this.transform;
 		holder.transform.localScale = Vector3.one;
 		holder.transform.localPosition = Vector3.zero;
 
 		mesh = core.GetComponent<MeshFilter> ().mesh;
-
-		if (spawnObject != null) {
-			Spawn (spawnObject, spawnNumber, 0f);
-		}
 	}
 
 	[System.Obsolete("Use PopulatePlanet instead")]

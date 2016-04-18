@@ -13,13 +13,8 @@ public class GravitySource : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		sinkObjects = new HashSet<GravitySink> ();
-		AddAllSinks ();
-	}
-
-	void AddAllSinks() {
 		foreach (GravitySink sink in GameObject.FindObjectsOfType<GravitySink>()) {
 			sinkObjects.Add(sink);
-			Debug.Log(this + ", " + sink);
 		}
 	}
 
