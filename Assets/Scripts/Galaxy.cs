@@ -18,8 +18,8 @@ public class Galaxy : MonoBehaviour {
 		int i = 0;
 
 		foreach(GameObject planet in planets) {
-			planet.transform.localScale *= (planets.Count - i++);
-			planet.GetComponent<Rigidbody> ().mass = planet.transform.localScale.x * 120f * (planets.Count - i);
+			planet.transform.localScale *= (planets.Count - i);
+			planet.GetComponent<Rigidbody> ().mass = planet.transform.localScale.x * 20f * (planets.Count - i);
 			Planet p = planet.GetComponent<Planet> ();
 			planet.transform.position = Vector3.right * dist;
 
@@ -36,7 +36,7 @@ public class Galaxy : MonoBehaviour {
 				pp.Spawn (Resources.Load ("Baker_house"), Random.Range (10, 20), .4f);
 			}
 
-			dist += p.transform.localScale.x * p.core.transform.localScale.x * 2 * multiplier;
+			dist += 100 + p.transform.localScale.x * 2 * multiplier;
 			i++;
 		}
 		//player.GetComponent<PlayerController> ().planet = planets.First.Value;

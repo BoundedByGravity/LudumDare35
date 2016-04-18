@@ -32,8 +32,8 @@ public class PlayerController : MonoBehaviour {
 	Vector3 camerat;
 
 	// Constants
-	[Range (1,20)] public float moveSpeed;
-	[Range (1,20)] public float jumpSpeed;
+	[Range (1,20)] public float moveSpeed = 5f;
+	[Range (1,20)] public float jumpSpeed = 10f;
 	float sprintFactor = 2f;
 	Planet[] planetArray;
 	bool stuck = false;
@@ -65,9 +65,6 @@ public class PlayerController : MonoBehaviour {
 
 		// Assumes the player is starting in the upward position, above a planet (x, y+k*radius, z)
 		trajectory = body.transform.rotation * Vector3.forward;
-
-		moveSpeed = 5f;
-		jumpSpeed = 10f;
 
 		BoxCollider collider = body.GetComponent<BoxCollider> ();
 		playerHeight = 2*collider.bounds.extents.y;
