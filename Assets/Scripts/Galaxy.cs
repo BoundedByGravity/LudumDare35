@@ -13,7 +13,10 @@ public class Galaxy : MonoBehaviour {
 		planets = new LinkedList<GameObject> ();
 		addPlanets (planets, 5);
 
-		player = Instantiate (Resources.Load ("Player"), Vector3.up * 200, Quaternion.identity) as GameObject;
+		Vector3 position = Vector3.up * 200;
+		Quaternion rotation = Quaternion.identity;
+		rotation.SetLookRotation (new Vector3 (1, 0, 0));
+		player = Instantiate (Resources.Load ("Player"), position, rotation) as GameObject;
 		float dist = 0;
 		int i = 0;
 
@@ -32,8 +35,8 @@ public class Galaxy : MonoBehaviour {
 			if (pp != null) {
 				pp.Spawn (Resources.Load ("Tree"), Random.Range (100, 300), .5f);
 				pp.Spawn (Resources.Load ("WaterWell"), Random.Range (30, 80), .4f);
-				pp.Spawn (Resources.Load ("Stone"), Random.Range (40, 90), .4f);
-				pp.Spawn (Resources.Load ("Baker_house"), Random.Range (10, 20), .4f);
+				pp.Spawn (Resources.Load ("Stone"), Random.Range (100, 200), .4f);
+				//pp.Spawn (Resources.Load ("Baker_house"), Random.Range (10, 20), .4f);
 			}
 
 			dist += 100 + p.transform.localScale.x * 2 * multiplier;
