@@ -147,8 +147,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 492440aaf2e9544ac92fceabecf4dd81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  jumpSpeed: 10
+  moveSpeed: 20
+  jumpSpeed: 20
   planet: {fileID: 0}
 --- !u!114 &11448150
 MonoBehaviour:

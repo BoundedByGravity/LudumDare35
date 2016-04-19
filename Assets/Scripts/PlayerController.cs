@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 struct PlanetProperties {
 	public float radius;
@@ -107,6 +108,7 @@ public class PlayerController : MonoBehaviour {
 		if (cancel) {
 			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
 				Cursor.lockState = cursorLockModeVisible;
+				SceneManager.LoadScene("Main Menu");
 			} else {
 				Cursor.lockState = cursorLockModeHidden;
 			}
@@ -167,6 +169,7 @@ public class PlayerController : MonoBehaviour {
 
 		float horizontalLeftStick = Input.GetAxis ("Horizontal");
 		float verticalLeftStick = Input.GetAxis ("Vertical");
+
 
 		//Debug.Log (horizontalLeftStick + " " + verticalLeftStick);
 
