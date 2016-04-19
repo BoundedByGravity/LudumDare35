@@ -33,9 +33,12 @@ public class Galaxy : MonoBehaviour {
 
 			PopulatePlanet pp = p.GetComponent<PopulatePlanet> ();
 			if (pp != null) {
-				pp.Spawn (Resources.Load ("Tree"), Random.Range (100, 300), .5f);
-				pp.Spawn (Resources.Load ("WaterWell"), Random.Range (30, 80), .4f);
-				pp.Spawn (Resources.Load ("Stone"), Random.Range (100, 200), .4f);
+				// If in browser: Don't spawn this, because lag
+				if (!Application.isWebPlayer) {
+					pp.Spawn (Resources.Load ("Tree"), Random.Range (100, 300), .5f);
+					pp.Spawn (Resources.Load ("WaterWell"), Random.Range (30, 80), .4f);
+					pp.Spawn (Resources.Load ("Stone"), Random.Range (100, 200), .4f);
+				}
 				//pp.Spawn (Resources.Load ("Baker_house"), Random.Range (10, 20), .4f);
 			}
 
