@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour {
 	PlanetProperties planetProperties;
 
 	Animator animator;
+	Planet planet;
 
 	public bool canInteract {
 		get;
@@ -82,6 +83,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void setPlanet(Planet p) {
+		this.planet = p;
 		if (p != null) {
 			this.planetProperties = new PlanetProperties (p, playerHeight);
 		} else {
@@ -100,6 +102,7 @@ public class PlayerController : MonoBehaviour {
 			nextCamera ();
 		}
 
+		/*
 		bool cancel = Input.GetButtonDown("Cancel");
 		if (cancel) {
 			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
@@ -110,6 +113,7 @@ public class PlayerController : MonoBehaviour {
 			}
 			Cursor.visible = !Cursor.visible;
 		}
+		*/
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -123,9 +127,6 @@ public class PlayerController : MonoBehaviour {
 		// TODO: Use radius from closest planet or use a trigger to detect landing on a planet
 		float dist = Vector3.Distance (body.position, planetProperties.position);
 		return dist < planetProperties.landRadius + planetProperties.boundaryCondition;
-	}
-	float dist(Vector3 v) {
-		return Vector3.Distance (body.position, v);
 	}
 
 	void land() {
@@ -162,25 +163,19 @@ public class PlayerController : MonoBehaviour {
 
 	void setClosestPlanet() {
 		Planet[] planetArray = Component.FindObjectsOfType<Planet> ();
-		float mindist = dist (planetProperties.position);
-		bool changed = false;
-		Planet swap = null;
+		float mindist = float.MaxValue;
+		Planet closest = null;
 		foreach (Planet p in planetArray) {
-			float tdist = dist (p.transform.position);
+			float tdist = Vector3.Distance (transform.position, p.transform.position);
 			if (tdist < mindist) {
 				mindist = tdist;
-				swap = p;
-				changed = true;
+				closest = p;
 			}
 		}
-		if (changed) {
-			setPlanet (swap);
-		}
+		setPlanet (closest);
 	}
 
 	void FixedUpdate() {
-
-
 		float horizontalLeftStick = Input.GetAxis ("Horizontal");
 		float verticalLeftStick = Input.GetAxis ("Vertical");
 
@@ -221,7 +216,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void interact() {
-		const float maxDistance = 5f;
+		const float maxDistance = 10f;
 
 		// Move this into oninput part when done with debugging
 		Vector3 origin = transform.position - transform.up * transform.localScale.y * .5f;
@@ -275,9 +270,9 @@ public class PlayerController : MonoBehaviour {
 			gravitySink.setAcceptsForce (false);
 
 			// Calculate how much the planet has moved since last cycle, and move the player along with it.
-			//Vector3 dv = planet.transform.position - planetProperties.position;
-			//planetProperties = new PlanetProperties (planet, playerHeight);
-			//this.transform.position += dv;
+			Vector3 dv = planet.transform.position - planetProperties.position;
+			planetProperties = new PlanetProperties (planet, playerHeight);
+			this.transform.position += dv;
 
 
 			trajectory = camerat;
