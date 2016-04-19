@@ -36,7 +36,6 @@ public class PlayerController : MonoBehaviour {
 	[Range (1,20)] public float moveSpeed = 5f;
 	[Range (1,20)] public float jumpSpeed = 10f;
 	float sprintFactor = 2f;
-	Planet[] planetArray;
 	bool stuck = false;
 
 	float deltaMouseX = 0;
@@ -51,11 +50,14 @@ public class PlayerController : MonoBehaviour {
 	const CursorLockMode cursorLockModeHidden = CursorLockMode.Locked;
 	const CursorLockMode cursorLockModeVisible = CursorLockMode.None;
 
-	// Lol
-	public Planet planet;
 	PlanetProperties planetProperties;
 
 	Animator animator;
+
+	public bool canInteract {
+		get;
+		private set;
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -63,7 +65,6 @@ public class PlayerController : MonoBehaviour {
 		Cursor.lockState = cursorLockModeHidden;
 		Cursor.visible = false;
 
-		planetArray = Component.FindObjectsOfType<Planet> ();
 		body = this.gameObject.GetComponent<Rigidbody> ();
 
 		// Assumes the player is starting in the upward position, above a planet (x, y+k*radius, z)
@@ -74,10 +75,6 @@ public class PlayerController : MonoBehaviour {
 
 		camerat = trajectory;
 
-		if(this.planet != null) {
-			setPlanet (this.planet);
-		}
-
 		animator = this.GetComponentInChildren<Animator> ();
 
 		// Initializes the camera
@@ -85,7 +82,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void setPlanet(Planet p) {
-		this.planet = p;
 		if (p != null) {
 			this.planetProperties = new PlanetProperties (p, playerHeight);
 		} else {
@@ -164,6 +160,24 @@ public class PlayerController : MonoBehaviour {
 		cameras [nextEnabled].enabled = true;
 	}
 
+	void setClosestPlanet() {
+		Planet[] planetArray = Component.FindObjectsOfType<Planet> ();
+		float mindist = dist (planetProperties.position);
+		bool changed = false;
+		Planet swap = null;
+		foreach (Planet p in planetArray) {
+			float tdist = dist (p.transform.position);
+			if (tdist < mindist) {
+				mindist = tdist;
+				swap = p;
+				changed = true;
+			}
+		}
+		if (changed) {
+			setPlanet (swap);
+		}
+	}
+
 	void FixedUpdate() {
 
 
@@ -186,21 +200,8 @@ public class PlayerController : MonoBehaviour {
 			alignFirstPersonCamera (pitchCharacterInput);
 		}
 
-
-		float mindist = dist (planetProperties.position);
-		bool changed = false;
-		Planet swap = null;
-		foreach (Planet p in planetArray) {
-			float tdist = dist (p.transform.position);
-			if (tdist < mindist) {
-				mindist = tdist;
-				swap = p;
-				changed = true;
-			}
-		}
-		if (changed) {
-			setPlanet (swap);
-		}
+		setClosestPlanet ();
+		interact ();
 
 	}
 
@@ -217,6 +218,30 @@ public class PlayerController : MonoBehaviour {
 		const float lowerLimit = 80;
 		currentPitch = currentPitch < 180 ? Mathf.Min(currentPitch, lowerLimit) : Mathf.Max(currentPitch, upperLimit);
 		firstPersonCam.transform.localRotation = Quaternion.Euler (currentPitch, 0, 0);
+	}
+
+	void interact() {
+		const float maxDistance = 5f;
+
+		// Move this into oninput part when done with debugging
+		Vector3 origin = transform.position - transform.up * transform.localScale.y * .5f;
+		Vector3 direction = transform.forward;
+		Debug.DrawRay (origin, direction*maxDistance, Color.red);
+
+		Ray ray = new Ray(origin, direction);
+		RaycastHit hit;
+		int lifeLayer = 1 << LayerMask.NameToLayer ("Life");
+		if (Physics.Raycast(ray, out hit, maxDistance, lifeLayer)){
+			Life life = hit.collider.transform.GetComponent<Life> ();
+			if (life != null) {
+				canInteract = true;
+				if (Input.GetButton ("Interact")) {
+					life.interact (gameObject);
+				}
+			} else {
+				canInteract = false;
+			}
+		}
 	}
 
 	void movePlayer(float forwardCharacterInput, float sidewaysCharacterInput, float rotateCharacterInput, bool jump, bool sprint) {
@@ -250,9 +275,9 @@ public class PlayerController : MonoBehaviour {
 			gravitySink.setAcceptsForce (false);
 
 			// Calculate how much the planet has moved since last cycle, and move the player along with it.
-			Vector3 dv = planet.transform.position - planetProperties.position;
-			planetProperties = new PlanetProperties (planet, playerHeight);
-			this.transform.position += dv;
+			//Vector3 dv = planet.transform.position - planetProperties.position;
+			//planetProperties = new PlanetProperties (planet, playerHeight);
+			//this.transform.position += dv;
 
 
 			trajectory = camerat;

@@ -24,7 +24,7 @@ public class TheShapeShiftBox : Life {
 		//player.GetComponent<PlayerController> ().moveSpeed = 0;
 		GameObject human = player.transform.FindChild("human").gameObject;
 		if (human != null) {
-			Destroy (human);
+			human.SetActive (false);
 		}
 		player.GetComponentInChildren<AudioSource> ().Stop ();
 
