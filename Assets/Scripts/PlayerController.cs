@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour {
 
 	float playerHeight;
 
-	const CursorLockMode cursorLockModeHidden = CursorLockMode.Confined;
+	const CursorLockMode cursorLockModeHidden = CursorLockMode.Locked;
 	const CursorLockMode cursorLockModeVisible = CursorLockMode.None;
 
 	// Lol
