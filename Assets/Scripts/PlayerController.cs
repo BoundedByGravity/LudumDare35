@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour {
 		body = this.gameObject.GetComponent<Rigidbody> ();
 
 		// Assumes the player is starting in the upward position, above a planet (x, y+k*radius, z)
-		trajectory = body.transform.rotation * Vector3.forward;
+		trajectory = body.transform.forward;
 
 		BoxCollider collider = body.GetComponent<BoxCollider> ();
 		playerHeight = 2*collider.bounds.extents.y;
@@ -114,6 +114,36 @@ public class PlayerController : MonoBehaviour {
 			Cursor.visible = !Cursor.visible;
 		}
 		*/
+
+		interact ();
+	}
+
+	void interact() {
+		const float maxDistance = 10f;
+
+		Camera currentCamera = getCurrentCamera ();
+
+		// Move this into oninput part when done with debugging
+		Vector3 origin = transform.position;
+		Vector3 direction = transform.forward;
+
+		//Debug.DrawRay (origin, direction*maxDistance, Color.red);
+		Debug.DrawRay (origin, currentCamera.transform.forward*maxDistance, Color.green);
+
+		Ray ray = new Ray(origin, direction);
+		RaycastHit hit;
+		int lifeLayer = 1 << LayerMask.NameToLayer ("Life");
+		if (Physics.Raycast(ray, out hit, maxDistance, lifeLayer)){
+			Life life = hit.collider.transform.GetComponent<Life> ();
+			if (life != null) {
+				canInteract = true;
+				if (Input.GetButtonDown ("Interact")) {
+					life.interact (gameObject);
+				}
+			} else {
+				canInteract = false;
+			}
+		}
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -161,6 +191,16 @@ public class PlayerController : MonoBehaviour {
 		cameras [nextEnabled].enabled = true;
 	}
 
+	Camera getCurrentCamera() {
+		Camera[] cameras = this.GetComponentsInChildren<Camera> ();
+		foreach(Camera camera in cameras) {
+			if (camera.enabled) {
+				return camera;
+			}
+		}
+		return cameras [0];
+	}
+
 	void setClosestPlanet() {
 		Planet[] planetArray = Component.FindObjectsOfType<Planet> ();
 		float mindist = float.MaxValue;
@@ -196,7 +236,6 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		setClosestPlanet ();
-		interact ();
 
 	}
 
@@ -215,29 +254,6 @@ public class PlayerController : MonoBehaviour {
 		firstPersonCam.transform.localRotation = Quaternion.Euler (currentPitch, 0, 0);
 	}
 
-	void interact() {
-		const float maxDistance = 10f;
-
-		// Move this into oninput part when done with debugging
-		Vector3 origin = transform.position - transform.up * transform.localScale.y * .5f;
-		Vector3 direction = transform.forward;
-		Debug.DrawRay (origin, direction*maxDistance, Color.red);
-
-		Ray ray = new Ray(origin, direction);
-		RaycastHit hit;
-		int lifeLayer = 1 << LayerMask.NameToLayer ("Life");
-		if (Physics.Raycast(ray, out hit, maxDistance, lifeLayer)){
-			Life life = hit.collider.transform.GetComponent<Life> ();
-			if (life != null) {
-				canInteract = true;
-				if (Input.GetButton ("Interact")) {
-					life.interact (gameObject);
-				}
-			} else {
-				canInteract = false;
-			}
-		}
-	}
 
 	void movePlayer(float forwardCharacterInput, float sidewaysCharacterInput, float rotateCharacterInput, bool jump, bool sprint) {
 		/* Moves the player according to input arguments (which are all actual controller input)

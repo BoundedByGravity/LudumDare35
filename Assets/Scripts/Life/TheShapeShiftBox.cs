@@ -20,7 +20,7 @@ public class TheShapeShiftBox : Life {
 	Light l;
 
 	public override void interact(GameObject player) {
-		print ("Hi");
+		print ("Get ready to disco");
 		//player.GetComponent<PlayerController> ().moveSpeed = 0;
 		GameObject human = player.transform.FindChild("human").gameObject;
 		if (human != null) {
