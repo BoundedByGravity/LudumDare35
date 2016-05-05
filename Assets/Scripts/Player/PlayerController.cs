@@ -21,6 +21,7 @@ struct PlanetProperties {
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
 public class PlayerController : MonoBehaviour {
+	// TODO: Divide move/physics logic and interaction/input logic
 
 	Rigidbody body;
 
@@ -47,6 +48,11 @@ public class PlayerController : MonoBehaviour {
 	//GravitySink gravitySink;
 
 	float playerHeight;
+
+	public bool canInteract {
+		get;
+		private set;
+	}
 
 	const CursorLockMode cursorLockModeHidden = CursorLockMode.Locked;
 	const CursorLockMode cursorLockModeVisible = CursorLockMode.None;
@@ -81,7 +87,29 @@ public class PlayerController : MonoBehaviour {
 		animator = this.GetComponentInChildren<Animator> ();
 
 		// Initializes the camera
+		InitializeCameras();
 		nextCamera ();
+	}
+
+	void InitializeCameras() {
+		// This didn't do what I thought it could do (avoid rendering far-away objects)
+		// Something that does this is still needed
+		Camera[] cameras = this.GetComponentsInChildren<Camera> ();
+		float[] distances = new float[32];
+		distances[1] = 10;
+		distances[2] = 10;
+		distances[3] = 10;
+		distances[4] = 10;
+		distances[5] = 10;
+		distances[6] = 10;
+		distances[7] = 10;
+		distances[8] = 10;
+		distances[9] = 10;
+		distances[10] = 10;
+		distances[11] = 10;
+		cameras[0].layerCullDistances = distances;
+		cameras[1].layerCullDistances = distances;
+		Debug.Log ("Set up cameras");
 	}
 
 	public void setPlanet(Planet p) {
@@ -104,11 +132,13 @@ public class PlayerController : MonoBehaviour {
 			nextCamera ();
 		}
 
+		interact ();
+
 		bool cancel = Input.GetButtonDown("Cancel");
 		if (cancel) {
 			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
 				Cursor.lockState = cursorLockModeVisible;
-				SceneManager.LoadScene("Main Menu");
+				//SceneManager.LoadScene("Main Menu");
 			} else {
 				Cursor.lockState = cursorLockModeHidden;
 			}
@@ -162,6 +192,17 @@ public class PlayerController : MonoBehaviour {
 		}
 		//Debug.Log ("Switching to camera " + nextEnabled);
 		cameras [nextEnabled].enabled = true;
+		InitializeCameras();
+	}
+
+	Camera activeCamera() {
+		Camera[] cameras = this.GetComponentsInChildren<Camera> ();
+		foreach (Camera camera in cameras) {
+			if (camera.enabled) {
+				return camera;
+			}
+		}
+		return cameras[0];
 	}
 
 	void FixedUpdate() {
@@ -204,6 +245,33 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
+	// Interaction logic
+	void interact() {
+		const float maxDistance = 5f;
+
+		Camera camera = activeCamera ();
+
+		// Move this into oninput part when done with debugging
+		Vector3 origin = camera.transform.position - transform.up * transform.localScale.y * .1f;
+		Vector3 direction = camera.transform.forward;
+		Debug.DrawRay (origin, direction*maxDistance, Color.red);
+
+		Ray ray = new Ray(origin, direction);
+		RaycastHit hit;
+		int lifeLayer = 1 << LayerMask.NameToLayer ("Life");
+		if (Physics.Raycast (ray, out hit, maxDistance, lifeLayer)) {
+			Life life = hit.collider.transform.GetComponent<Life> ();
+			if (life != null) {
+				canInteract = true;
+				if (Input.GetButton ("Interact")) {
+					life.interact (gameObject);
+				}
+			}
+		} else {
+			canInteract = false;
+		}
+	}
+
 	void alignFirstPersonCamera(float pitchCharacterInput) {
 		// TODO: This wont be the first person camera always
 		Camera[] cameras = this.GetComponentsInChildren<Camera> ();
@@ -224,8 +292,7 @@ public class PlayerController : MonoBehaviour {
 		 *  As it turns out, making a good model of input is hard, and the following requirements must be met:
 		 *  - Should be able to walk around a planet (given simulated gravity)
 		 *  - Should not run faster diagonally than forward/sideways
-		 *  - Should be able to sprint
-		 * All are fulfilled.
+		 *  - Should be able to sprint, but only in a forward direction.
 		 */
 		bool isBound = isPlanetbound ();
 		Vector3 up = getPlayerUpOnPlanet ();

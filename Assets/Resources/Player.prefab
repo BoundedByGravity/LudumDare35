@@ -31,6 +31,7 @@ GameObject:
   - 20: {fileID: 2029070}
   - 92: {fileID: 9260616}
   - 124: {fileID: 12491342}
+  - 114: {fileID: 114000012159205136}
   m_Layer: 0
   m_Name: 3rd Person Camera
   m_TagString: MainCamera
@@ -309,6 +310,7 @@ GameObject:
   - 124: {fileID: 124000010516429948}
   - 92: {fileID: 92000010840449458}
   - 81: {fileID: 81000011343498630}
+  - 114: {fileID: 114000010198935176}
   m_Layer: 0
   m_Name: 1st Person Camera
   m_TagString: Untagged
@@ -1058,6 +1060,28 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114000010198935176
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012447359434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df6df2232fbb94ff7ba00b34b9a2f537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114000012159205136
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 161088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df6df2232fbb94ff7ba00b34b9a2f537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114000014072016434
 MonoBehaviour:
   m_ObjectHideFlags: 1
