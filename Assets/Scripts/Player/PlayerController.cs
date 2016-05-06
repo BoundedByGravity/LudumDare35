@@ -31,7 +31,6 @@ public class PlayerController : MonoBehaviour {
 
 	// Initial trajectory vector, will change
 	Vector3 trajectory;
-	Vector3 camerat;
 
 	// Constants
 	[Range (1,20)] public float moveSpeed = 5f;
@@ -78,7 +77,7 @@ public class PlayerController : MonoBehaviour {
 		BoxCollider collider = body.GetComponent<BoxCollider> ();
 		playerHeight = 2*collider.bounds.extents.y;
 
-		camerat = trajectory;
+		//camerat = trajectory;
 
 		if(this.planet != null) {
 			setPlanet (this.planet);
@@ -138,6 +137,7 @@ public class PlayerController : MonoBehaviour {
 		if (cancel) {
 			if (Cursor.lockState == CursorLockMode.Confined || Cursor.lockState == CursorLockMode.Locked) {
 				Cursor.lockState = cursorLockModeVisible;
+				// We do not want to exit to the main menu, we want a pause menu with the option to exit to the main menu
 				//SceneManager.LoadScene("Main Menu");
 			} else {
 				Cursor.lockState = cursorLockModeHidden;
@@ -164,6 +164,7 @@ public class PlayerController : MonoBehaviour {
 
 	void land() {
 		body.position = (body.position-planetProperties.position).normalized * planetProperties.landRadius + planetProperties.position;
+		//body.rotation.SetLookRotation(getPlayerUpOnPlanet());
 	}
 
 	Vector3 getPlayerUpOnPlanet() {
@@ -227,7 +228,10 @@ public class PlayerController : MonoBehaviour {
 			alignFirstPersonCamera (pitchCharacterInput);
 		}
 
+		closestPlanet ();
+	}
 
+	void closestPlanet() {
 		float mindist = dist (planetProperties.position);
 		bool changed = false;
 		Planet swap = null;
@@ -242,7 +246,6 @@ public class PlayerController : MonoBehaviour {
 		if (changed) {
 			setPlanet (swap);
 		}
-
 	}
 
 	// Interaction logic
@@ -287,7 +290,7 @@ public class PlayerController : MonoBehaviour {
 		firstPersonCam.transform.localRotation = Quaternion.Euler (currentPitch, 0, 0);
 	}
 
-	void movePlayer(float forwardCharacterInput, float sidewaysCharacterInput, float rotateCharacterInput, bool jump, bool sprint) {
+	void movePlayer(float forwardCharacterInput, float sidewaysCharacterInput, float rotateCharacterInput, bool jumpInput, bool sprintInput) {
 		/* Moves the player according to input arguments (which are all actual controller input)
 		 *  As it turns out, making a good model of input is hard, and the following requirements must be met:
 		 *  - Should be able to walk around a planet (given simulated gravity)
@@ -299,11 +302,13 @@ public class PlayerController : MonoBehaviour {
 
 		//Debug.Log ("isBound: " + isBound + ", dist: " + Vector3.Distance(body.position, Vector3.zero));
 		trajectory = (trajectory - Vector3.Project (trajectory, up)).normalized;
-		camerat = (camerat - Vector3.Project (camerat, up)).normalized;
-		body.rotation = Quaternion.LookRotation (camerat, up);
+
+		// This obviously doesn't do what we think it does provided how the character can be placed at an angle with the ground after collisions
+		body.rotation = Quaternion.LookRotation (trajectory, up);
+
 		if (rotateCharacterInput != 0) {
-			Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (camerat, up).normalized;
-			camerat = (camerat * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180)).normalized;
+			Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (trajectory, up).normalized;
+			trajectory = (trajectory * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180)).normalized;
 		}
 
 		GravitySink gravitySink = this.GetComponent<GravitySink> ();
@@ -321,14 +326,6 @@ public class PlayerController : MonoBehaviour {
 			planetProperties = new PlanetProperties (planet, playerHeight);
 			this.transform.position += dv;
 
-
-			trajectory = camerat;
-			if (rotateCharacterInput != 0) {
-				Vector3 trajectory2 = -rotateCharacterInput * Vector3.Cross (trajectory, up).normalized;
-				trajectory = trajectory * Mathf.Cos (degree_rotation * Mathf.PI / 180) + trajectory2 * Mathf.Sin (degree_rotation * Mathf.PI / 180);
-			}
-			camerat = trajectory;
-
 			// Moves the character forward/backwards
 			Vector3 forwardOrBackwardVector = forwardCharacterInput * trajectory;
 			Vector3 tradjectoryside = Vector3.Cross (-trajectory, up).normalized;
@@ -337,7 +334,7 @@ public class PlayerController : MonoBehaviour {
 			float factor = Mathf.Max (Mathf.Abs (forwardCharacterInput), Mathf.Abs (sidewaysCharacterInput));
 
 			// TODO: Do something smoother than 0.7, such as a linear scale depending on how much weight lies forward
-			if (sprint && forwardCharacterInput > Mathf.Abs (sidewaysCharacterInput)) { //To much behviour in comparasion ;)
+			if (sprintInput && forwardCharacterInput > Mathf.Abs (sidewaysCharacterInput)) { //To much behviour in comparasion ;)
 				body.velocity = factor * sprintFactor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
 			} else {
 				body.velocity = factor * moveSpeed * (forwardOrBackwardVector + sidewaysVector).normalized;
@@ -350,12 +347,17 @@ public class PlayerController : MonoBehaviour {
 			if (isBound) {
 				land ();
 			}
-			if (jump) {
-				body.position += up * 2 * planetProperties.boundaryCondition;
-				body.velocity += up * jumpSpeed;
+			if (jumpInput) {
+				jump ();
 			}
 		} else {
 			gravitySink.setAcceptsForce (true);
 		}
+	}
+
+	void jump() {
+		Vector3 up = getPlayerUpOnPlanet ();
+		body.position += up * 2 * planetProperties.boundaryCondition;
+		body.velocity += up * jumpSpeed;
 	}
 }
