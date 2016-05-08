@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public static class VectorFields {
@@ -29,6 +29,7 @@ public static class VectorFields {
 
 		// Basic rotation constant
 		float rotation = 10f;
+		//float rotation = 50f * pos.y/10;
 
 		float upSpeed = Random.Range(0.5f, 1f)*Mathf.Max(0.1f, (pos.y-falloffHeight*dissipateFalloffCoeff));
 		Vector3 velocity = ConeField(pos, (rotation*(Mathf.Max(coreHeight, Mathf.Abs(pos.y/falloffHeight)))), upSpeed: upSpeed);
